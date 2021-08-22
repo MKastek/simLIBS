@@ -9,13 +9,19 @@ import os
 from scipy.interpolate import CubicSpline
 
 
+
 class MyError(Exception):
     pass
+
+__author__ = 'Marcin Katek'
 
 
 class SimulatedLIBS(object):
 
-    def __init__(self,elements,percentages,Te=1.0,Ne=10**17,resolution=1000,low_w=200,upper_w=1000,max_ion_charge=1):
+    # filepath to class root folder
+    project_root = os.path.dirname(os.path.abspath(__file__))
+
+    def __init__(self,Te,Ne,elements,percentages,resolution,low_w,upper_w,max_ion_charge):
 
         """
         :param Te:  Electron temperature Te [eV]
@@ -82,7 +88,7 @@ class SimulatedLIBS(object):
                "&eden={}" \
                "&maxcharge={}" \
                "&min_rel_int=0.01" \
-               "&SimualtedLIBS=1"
+               "&libs=1"
         site = site.format(composition,spectrum,self.low_w,self.upper_w,self.resolution,self.Te,self.Ne,self.max_ion_charge)
         respond = requests.get(site)
         soup = BeautifulSoup(respond.content, 'html.parser')
@@ -130,7 +136,7 @@ class SimulatedLIBS(object):
         plt.title("Simulated LIBS")
         plt.xlabel(r'$\lambda$ [nm]')
         plt.ylabel('Line Intensity [a.u.]')
-        plt.show()
+
 
     def get_intensity_interpolated(self):
         """
@@ -138,8 +144,14 @@ class SimulatedLIBS(object):
         """
         return np.array(self.interpolated_spectrum['intensity']).reshape(1, -1)
 
-    def save_to_csv(self,filepath):
-        self.interpolated_spectrum.to_csv(path_or_buf=filepath)
+    def save_to_csv(self,filename):
+        self.interpolated_spectrum.to_csv(path_or_buf=os.path.join(SimulatedLIBS.project_root,filename))
 
 
 
+
+libs = SimulatedLIBS(Te = 1.0, Ne = 10**17, elements = ["W","He","O"], percentages = [50,25,25],
+                     resolution = 1000, low_w = 200, upper_w = 1000, max_ion_charge = 3)
+libs.save_to_csv('filename')
+libs.plot('blue')
+plt.show()

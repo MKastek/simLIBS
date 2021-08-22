@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(
-    name='SimualtedLIBS',
+    name='SimulatedLIBS',
     version='0.0.1',
     packages=setuptools.find_packages(),
     url='',

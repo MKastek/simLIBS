@@ -1,7 +1,0 @@
-setup.py
-libs/Simulated_LIBS.py
-libs/__init__.py
-libs.egg-info/PKG-INFO
-libs.egg-info/SOURCES.txt
-libs.egg-info/dependency_links.txt
-libs.egg-info/top_level.txt
