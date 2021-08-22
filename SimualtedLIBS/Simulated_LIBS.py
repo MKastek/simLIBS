@@ -15,9 +15,6 @@ class MyError(Exception):
 
 class SimulatedLIBS(object):
 
-    # filepath to class root folder
-    project_root = os.path.dirname(os.path.abspath(__file__))
-
     def __init__(self,elements,percentages,Te=1.0,Ne=10**17,resolution=1000,low_w=200,upper_w=1000,max_ion_charge=1):
 
         """
@@ -85,7 +82,7 @@ class SimulatedLIBS(object):
                "&eden={}" \
                "&maxcharge={}" \
                "&min_rel_int=0.01" \
-               "&libs=1"
+               "&SimualtedLIBS=1"
         site = site.format(composition,spectrum,self.low_w,self.upper_w,self.resolution,self.Te,self.Ne,self.max_ion_charge)
         respond = requests.get(site)
         soup = BeautifulSoup(respond.content, 'html.parser')
