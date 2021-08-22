@@ -142,6 +142,7 @@ class SimulatedLIBS(object):
         return np.array(self.interpolated_spectrum['intensity']).reshape(1, -1)
 
     def save_to_csv(self,filename):
+        print(SimulatedLIBS.project_root)
         self.interpolated_spectrum.to_csv(path_or_buf=os.path.join(SimulatedLIBS.project_root,filename))
 
 
