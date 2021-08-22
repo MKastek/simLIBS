@@ -18,7 +18,7 @@ class SimulatedLIBS(object):
     # filepath to class root folder
     project_root = os.path.dirname(os.path.abspath(__file__))
 
-    def __init__(self,Te,Ne,elements,percentages,resolution,low_w,upper_w,max_ion_charge):
+    def __init__(self,elements,percentages,Te=1.0,Ne=10**17,resolution=1000,low_w=200,upper_w=1000,max_ion_charge=1):
 
         """
         :param Te:  Electron temperature Te [eV]
