@@ -9,11 +9,8 @@ import os
 from scipy.interpolate import CubicSpline
 
 
-
 class MyError(Exception):
     pass
-
-__author__ = 'Marcin Katek'
 
 
 class SimulatedLIBS(object):
@@ -21,12 +18,12 @@ class SimulatedLIBS(object):
     # filepath to class root folder
     project_root = os.path.dirname(os.path.abspath(__file__))
 
-    def __init__(self,Te,Ne,elements,percentages,resolution,low_w,upper_w,max_ion_charge):
+    def __init__(self,Te=1.0,Ne=10**17,elements=None,percentages=None,resolution = 1000,low_w = 200,upper_w = 1000 ,max_ion_charge = 3):
 
         """
         :param Te:  Electron temperature Te [eV]
         :param Ne:  Electron density Ne [cm^-3]
-        :param elements:    List of elements_IFPiLM_Te=1_Ne=1e17
+        :param elements:
         :param percentages: List of element percentages
         :param resolution:
         :param low_w:   Lower wavelength [nm]
@@ -137,21 +134,16 @@ class SimulatedLIBS(object):
         plt.xlabel(r'$\lambda$ [nm]')
         plt.ylabel('Line Intensity [a.u.]')
 
-
-    def get_intensity_interpolated(self):
+    def get_interpolated_intensitiy(self):
         """
         :return:  interpolated intensity for ML predict method (scikit-learn)
         """
         return np.array(self.interpolated_spectrum['intensity']).reshape(1, -1)
 
+    def get_raw_intensity(self):
+        pass
+
     def save_to_csv(self,filename):
         self.interpolated_spectrum.to_csv(path_or_buf=os.path.join(SimulatedLIBS.project_root,filename))
 
 
-
-
-libs = SimulatedLIBS(Te = 1.0, Ne = 10**17, elements = ["W","He","O"], percentages = [50,25,25],
-                     resolution = 1000, low_w = 200, upper_w = 1000, max_ion_charge = 3)
-libs.save_to_csv('filename')
-libs.plot('blue')
-plt.show()

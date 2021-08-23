@@ -1,5 +1,5 @@
 setup.py
-SimulatedLIBS/Simulated_LIBS.py
+SimulatedLIBS/SimulatedLIBS.py
 SimulatedLIBS/__init__.py
 SimulatedLIBS.egg-info/PKG-INFO
 SimulatedLIBS.egg-info/SOURCES.txt
