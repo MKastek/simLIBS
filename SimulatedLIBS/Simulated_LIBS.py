@@ -146,4 +146,3 @@ class SimulatedLIBS(object):
     def save_to_csv(self,filename):
         self.interpolated_spectrum.to_csv(path_or_buf=os.path.join(SimulatedLIBS.project_root,filename))
 
-
