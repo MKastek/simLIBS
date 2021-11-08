@@ -133,6 +133,7 @@ class SimulatedLIBS(object):
         plt.title("Simulated LIBS")
         plt.xlabel(r'$\lambda$ [nm]')
         plt.ylabel('Line Intensity [a.u.]')
+        plt.show()
 
     def get_interpolated_intensitiy(self):
         """
