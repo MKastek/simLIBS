@@ -1,7 +1,9 @@
+README.md
 setup.py
 SimulatedLIBS/Simulated_LIBS.py
 SimulatedLIBS/__init__.py
 SimulatedLIBS.egg-info/PKG-INFO
 SimulatedLIBS.egg-info/SOURCES.txt
 SimulatedLIBS.egg-info/dependency_links.txt
+SimulatedLIBS.egg-info/requires.txt
 SimulatedLIBS.egg-info/top_level.txt

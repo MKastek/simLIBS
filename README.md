@@ -9,6 +9,3 @@ Institute of Plasma Physics and Laser Microfusion
 
 *SimulatedLIBS* provides simple Python class to simulate LIBS spectra with NIST LIBS Database interface.
 
-
-[Github-flavored Markdown](https://guides.github.com/features/mastering-markdown/)
-to write your content.

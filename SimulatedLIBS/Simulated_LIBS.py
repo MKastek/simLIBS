@@ -115,8 +115,6 @@ class SimulatedLIBS(object):
         # none negative values
         y = [0 if i < 0 else i for i in y]
         # zero values at the ends
-        y[0] = 0
-        y[-1] = 0
 
         self.interpolated_spectrum['wavelength'] = np.round(x, 1)
         self.interpolated_spectrum['intensity'] = np.round(y, 1)
