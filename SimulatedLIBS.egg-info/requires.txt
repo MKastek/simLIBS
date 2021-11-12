@@ -1,6 +1,0 @@
-pandas
-numpy
-matplotlib
-requests
-bs4
-scipy
