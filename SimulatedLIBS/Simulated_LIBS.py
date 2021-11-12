@@ -1,3 +1,5 @@
+import sys
+
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -31,14 +33,13 @@ class SimulatedLIBS(object):
         :param max_ion_charge:  Maximal ion charge
         """
 
-        """
         if sum(percentages) > 100 or Te < 0 or Ne < 0 or low_w > upper_w or upper_w < low_w or max_ion_charge < 0:
             try:
                 raise (MyError("Error in SimulatedLibs"))
             except MyError as error:
                 print(str(error))
                 sys.exit(1)
-        """
+
 
         self.Te = Te
         self.Ne = Ne
