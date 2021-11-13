@@ -121,11 +121,9 @@ class SimulatedLIBS(object):
         self.interpolated_spectrum['intensity'] = np.round(y, 1)
 
     def plot(self,color=(random.random(), random.random(), random.random())):
-        # normalization
-        norm = [float(i) / max(self.interpolated_spectrum["intensity"]) for i in self.interpolated_spectrum["intensity"]]
 
         # plot with random colors
-        plt.plot(self.interpolated_spectrum["wavelength"],norm,
+        plt.plot(self.interpolated_spectrum["wavelength"],self.interpolated_spectrum["intensity"],
                  label=str(self.elements)+str(self.percentages),
                  color=color)
         plt.grid()
