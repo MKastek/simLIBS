@@ -13,3 +13,8 @@ Institute of Plasma Physics and Laser Microfusion
 ```python
 pip install SimulatedLIBS
 ```
+## Import 
+```python
+from SimulatedLIBS import simulation
+```
+## 

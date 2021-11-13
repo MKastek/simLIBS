@@ -40,7 +40,6 @@ class SimulatedLIBS(object):
                 print(str(error))
                 sys.exit(1)
 
-
         self.Te = Te
         self.Ne = Ne
         self.elements = elements
@@ -107,27 +106,25 @@ class SimulatedLIBS(object):
 
     def interpolate(self, resolution=0.1):
         """
-        interpolation of intensity with given resolution using CubicSpline,
-        with assumption of none negative values and zero values at the ends
+        interpolation of intensity with given resolution using CubicSpline
         """
         cs = CubicSpline(self.raw_spectrum['wavelength'], self.raw_spectrum['intensity'], bc_type='natural')
         x = np.arange(self.low_w, self.upper_w, resolution)
         y = cs(x)
         # none negative values
         y = [0 if i < 0 else i for i in y]
-        # zero values at the ends
 
         self.interpolated_spectrum['wavelength'] = np.round(x, 1)
         self.interpolated_spectrum['intensity'] = np.round(y, 1)
 
-    def plot(self,color=(random.random(), random.random(), random.random())):
+    def plot(self,color=(random.random(), random.random(), random.random()),title='Simulated LIBS'):
 
         # plot with random colors
         plt.plot(self.interpolated_spectrum["wavelength"],self.interpolated_spectrum["intensity"],
                  label=str(self.elements)+str(self.percentages),
                  color=color)
         plt.grid()
-        plt.title("Simulated LIBS")
+        plt.title(title)
         plt.xlabel(r'$\lambda$ [nm]')
         plt.ylabel('Line Intensity [a.u.]')
         plt.show()
@@ -138,9 +135,6 @@ class SimulatedLIBS(object):
         """
         return np.array(self.interpolated_spectrum['intensity']).reshape(1, -1)
 
-    def get_raw_intensity(self):
-        pass
-
-    def save_to_csv(self,filename):
-        self.interpolated_spectrum.to_csv(path_or_buf=os.path.join(SimulatedLIBS.project_root,filename))
+    def save_to_csv(self,filepath):
+        self.interpolated_spectrum.to_csv(path_or_buf=filepath)
 
