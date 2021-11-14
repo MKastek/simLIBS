@@ -129,7 +129,7 @@ class SimulatedLIBS(object):
         plt.ylabel('Line Intensity [a.u.]')
         plt.show()
 
-    def get_interpolated_intensitiy(self):
+    def get_interpolated_intensity(self):
         """
         :return:  interpolated intensity for ML predict method (scikit-learn)
         """
