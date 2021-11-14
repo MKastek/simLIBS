@@ -35,7 +35,7 @@ class SimulatedLIBS(object):
 
         if sum(percentages) > 100 or Te < 0 or Ne < 0 or low_w > upper_w or upper_w < low_w or max_ion_charge < 0:
             try:
-                raise (MyError("Error in SimulatedLibs"))
+                raise (MyError("Error in SimulatedLLIBS"))
             except MyError as error:
                 print(str(error))
                 sys.exit(1)

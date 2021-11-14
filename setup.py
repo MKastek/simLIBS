@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='SimulatedLIBS',
-    version='0.0.10',
+    version='0.0.11',
     packages=setuptools.find_packages(),
     url='https://github.com/MKastek/LIBS',
     license='',
