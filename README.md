@@ -35,6 +35,7 @@ libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','H','Be'],perce
 ```python
 libs.plot(color='blue', title='W Be H composition')
 ```
+![alt text](https://github.com/MKastek/SimulatedLIBS/blob/master/plot.png)
 
 ### Save to file
 ```python
