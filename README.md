@@ -33,7 +33,7 @@ libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','H','Be'],perce
 
 ### Plot
 ```python
-libs.plot(color=blue, title='W Be H composition')
+libs.plot(color='blue', title='W Be H composition')
 ```
 
 ### Save to file
@@ -44,5 +44,5 @@ libs.save_to_csv('filename.csv')
 ### Interpolated intensity
 SimulatedLIBS interpolates retrieved data from NIST with cubic splines
 ```python
-libs.get_interpolated_intensity
+libs.get_interpolated_intensity()
 ```
