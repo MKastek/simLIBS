@@ -127,13 +127,18 @@ class SimulatedLIBS(object):
         plt.title(title)
         plt.xlabel(r'$\lambda$ [nm]')
         plt.ylabel('Line Intensity [a.u.]')
-        plt.show()
 
-    def get_interpolated_intensity(self):
+    def get_interpolated_spectrum(self):
         """
-        :return:  interpolated intensity for ML predict method (scikit-learn)
+        :return:  interpolated spectrum
         """
-        return np.array(self.interpolated_spectrum['intensity']).reshape(1, -1)
+        return self.interpolated_spectrum
+
+    def get_raw_spectrum(self):
+        """
+        :return:  raw spectrum
+        """
+        return self.raw_spectrum
 
     def save_to_csv(self,filepath):
         self.interpolated_spectrum.to_csv(path_or_buf=filepath)
