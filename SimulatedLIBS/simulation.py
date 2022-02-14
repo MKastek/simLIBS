@@ -141,5 +141,9 @@ class SimulatedLIBS(object):
         return self.raw_spectrum
 
     def save_to_csv(self,filepath):
+        """
+        :param filepath:
+        :return:
+        """
         self.interpolated_spectrum.to_csv(path_or_buf=filepath)
 

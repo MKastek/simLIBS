@@ -43,8 +43,14 @@ libs.plot(color='blue', title='W Be H composition')
 libs.save_to_csv('filename.csv')
 ```
 
-### Interpolated intensity
+### Interpolated spectrum
 SimulatedLIBS interpolates retrieved data from NIST with cubic splines
 ```python
-libs.get_interpolated_intensity()
+libs.get_interpolated_spectrum()
+```
+
+### Raw spectrum
+Raw retrieved data from NIST
+```python
+libs.get_raw_spectrum()
 ```
