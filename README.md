@@ -7,7 +7,7 @@ Computer methods of the identification of the elements in optical spectra obtain
 
 **Thesis supervisor**: Paweł Gąsior PhD  
 e-mail: pawel.gasior@ifpilm.pl  
-Institute of Plasma Physics and Laser Microfusion
+Institute of Plasma Physics and Laser Microfusion - IPPLM
 
 
 ## Installation
