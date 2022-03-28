@@ -9,6 +9,8 @@ import numpy as np
 import random
 import os
 from scipy.interpolate import CubicSpline
+from concurrent.futures import ProcessPoolExecutor
+import time
 
 
 class MyError(Exception):
@@ -147,3 +149,30 @@ class SimulatedLIBS(object):
         """
         self.interpolated_spectrum.to_csv(path_or_buf=filepath)
 
+    @staticmethod
+    def worker(input_df, num_of_materials):
+        percentages = input_df.iloc[random.randrange(num_of_materials)].values[:-1]
+        elements = input_df.iloc[random.randrange(num_of_materials)].keys().values[:-1]
+        fun = SimulatedLIBS(elements=elements, percentages=percentages).get_interpolated_spectrum()
+        return fun
+
+    @staticmethod
+    def create_dataset(input_csv_file, output_csv_file='out_put.csv', size=10, Te_min=1.0, Te_max=2.0, Ne_min=10**17, Ne_max=10**18):
+        input_df = pd.read_csv(input_csv_file)
+        num_of_materials = len(input_df)
+        print(num_of_materials)
+        print(input_df)
+        pool = ProcessPoolExecutor(4)
+        pp = [pool.submit(SimulatedLIBS.worker,input_df,num_of_materials) for i in range(size)]
+        for p in pp:
+            print(p.result()['intensity'])
+
+    @staticmethod
+    def create_random_dataset(elements_list,Te_min, Te_max, Ne_min, Ne_max):
+        pass
+
+t1 = time.time()
+if __name__ == '__main__':
+    SimulatedLIBS.create_dataset(input_csv_file=r"C:\Users\marci\Desktop\Python\SimulatedLIBS\data.csv")
+    t2 = time.time()
+    print(f"Execution time: {t2 - t1} s")
