@@ -150,29 +150,45 @@ class SimulatedLIBS(object):
         self.interpolated_spectrum.to_csv(path_or_buf=filepath)
 
     @staticmethod
-    def worker(input_df, num_of_materials):
+    def worker(input_df, num_of_materials,Te_min, Te_max, Ne_min, Ne_max):
         percentages = input_df.iloc[random.randrange(num_of_materials)].values[:-1]
         elements = input_df.iloc[random.randrange(num_of_materials)].keys().values[:-1]
-        fun = SimulatedLIBS(elements=elements, percentages=percentages).get_interpolated_spectrum()
-        return fun
+        name = input_df.iloc[random.randrange(num_of_materials)]['name']
+        Te = random.uniform(Te_min, Te_max)
+        Ne = random.uniform(1, 10)
+        fun = SimulatedLIBS(Te=Te,Ne=Ne,elements=elements, percentages=percentages).get_interpolated_spectrum()
+        return { 'spectrum': fun, 'composition': pd.DataFrame({'elements':elements, 'percentages': percentages}), 'name': name, 'Te': Te, 'Ne': Ne}
 
     @staticmethod
     def create_dataset(input_csv_file, output_csv_file='out_put.csv', size=10, Te_min=1.0, Te_max=2.0, Ne_min=10**17, Ne_max=10**18):
         input_df = pd.read_csv(input_csv_file)
         num_of_materials = len(input_df)
-        print(num_of_materials)
-        print(input_df)
         pool = ProcessPoolExecutor(4)
-        pp = [pool.submit(SimulatedLIBS.worker,input_df,num_of_materials) for i in range(size)]
+        pp = [pool.submit(SimulatedLIBS.worker,input_df,num_of_materials,Te_min,Te_max,Ne_min,Ne_max) for i in range(size)]
+        columns = [str(wavelength) for wavelength in pp[0].result()['spectrum']['wavelength']]
+        for val in input_df.columns.values:
+            columns.append(str(val))
+        columns.append('Te')
+        columns.append('Ne')
+        output_df = pd.DataFrame(columns=columns)
+
         for p in pp:
-            print(p.result()['intensity'])
+            intensity = p.result()['spectrum']['intensity'].values.tolist()
+            percentages = p.result()['composition']['percentages'].values.tolist()
+            intensity.extend(percentages)
+            intensity.extend(p.result()['name'])
+            intensity.append(p.result()['Te'])
+            intensity.append(p.result()['Ne'])
+            output_df = pd.concat([output_df,pd.DataFrame(data=[intensity],columns=columns)],ignore_index=True)
+        output_df.reset_index(drop=True)
+        print(output_df)
+        output_df.to_csv(output_csv_file)
+
 
     @staticmethod
     def create_random_dataset(elements_list,Te_min, Te_max, Ne_min, Ne_max):
         pass
 
-t1 = time.time()
+
 if __name__ == '__main__':
     SimulatedLIBS.create_dataset(input_csv_file=r"C:\Users\marci\Desktop\Python\SimulatedLIBS\data.csv")
-    t2 = time.time()
-    print(f"Execution time: {t2 - t1} s")
