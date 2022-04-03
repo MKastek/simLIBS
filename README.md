@@ -54,3 +54,7 @@ Raw retrieved data from NIST
 ```python
 libs.get_raw_spectrum()
 ```
+
+### Random dataset of samples
+Based on .csv file with chemical composition of samples, one can generate dataset of simulated measurements  
+with different Te and Ne values.
