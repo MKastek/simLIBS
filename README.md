@@ -56,5 +56,18 @@ libs.get_raw_spectrum()
 ```
 
 ### Random dataset of samples
-Based on .csv file with chemical composition of samples, one can generate dataset of simulated measurements  
-with different Te and Ne values.
+Based on .csv file with chemical composition of samples, one can generate dataset of simulated LIBS measurements  
+with different Te and Ne values
+
+Example of input .csv file:
+
+|W  |H  |He |name|
+|---|---|---|----|
+|50 |25 |25 |A   |
+|30 |60 |10 |B   |
+|40 |40 |20 |C   |
+
+```python
+if __name__ == '__main__':
+    simulation.SimulatedLIBS.create_dataset(input_csv_file="data.csv", output_csv_file='output.csv', size=100, Te_min=1.0, Te_max=2.0, Ne_min=10**17, Ne_max=10**18):
+```
