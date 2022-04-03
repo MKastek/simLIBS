@@ -155,9 +155,9 @@ class SimulatedLIBS(object):
         elements = input_df.iloc[random.randrange(num_of_materials)].keys().values[:-1]
         name = input_df.iloc[random.randrange(num_of_materials)]['name']
         Te = random.uniform(Te_min, Te_max)
-        Ne = random.uniform(1, 10)
+        Ne = random.uniform(1, Ne_max/Ne_min)
         fun = SimulatedLIBS(Te=Te,Ne=Ne,elements=elements, percentages=percentages).get_interpolated_spectrum()
-        return { 'spectrum': fun, 'composition': pd.DataFrame({'elements':elements, 'percentages': percentages}), 'name': name, 'Te': Te, 'Ne': Ne}
+        return { 'spectrum': fun, 'composition': pd.DataFrame({'elements':elements, 'percentages': percentages}), 'name': name, 'Te[eV]': Te, 'Ne[cm^-3]': Ne}
 
     @staticmethod
     def create_dataset(input_csv_file, output_csv_file='out_put.csv', size=10, Te_min=1.0, Te_max=2.0, Ne_min=10**17, Ne_max=10**18):
@@ -168,8 +168,8 @@ class SimulatedLIBS(object):
         columns = [str(wavelength) for wavelength in pp[0].result()['spectrum']['wavelength']]
         for val in input_df.columns.values:
             columns.append(str(val))
-        columns.append('Te')
-        columns.append('Ne')
+        columns.append('Te[eV]')
+        columns.append('Ne[cm^-3]'.format(Ne_min=Ne_min))
         output_df = pd.DataFrame(columns=columns)
 
         for p in pp:
@@ -177,13 +177,13 @@ class SimulatedLIBS(object):
             percentages = p.result()['composition']['percentages'].values.tolist()
             intensity.extend(percentages)
             intensity.extend(p.result()['name'])
-            intensity.append(p.result()['Te'])
-            intensity.append(p.result()['Ne'])
+            intensity.append(p.result()['Te[eV]'])
+            intensity.append(p.result()['Ne[cm^-3]'.format(Ne_min=Ne_min)])
             output_df = pd.concat([output_df,pd.DataFrame(data=[intensity],columns=columns)],ignore_index=True)
+
         output_df.reset_index(drop=True)
         print(output_df)
         output_df.to_csv(output_csv_file)
-
 
     @staticmethod
     def create_random_dataset(elements_list,Te_min, Te_max, Ne_min, Ne_max):
