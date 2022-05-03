@@ -164,26 +164,26 @@ class SimulatedLIBS(object):
         input_df = pd.read_csv(input_csv_file)
         num_of_materials = len(input_df)
         pool = ProcessPoolExecutor(4)
-        pp = [pool.submit(SimulatedLIBS.worker,input_df,num_of_materials,Te_min,Te_max,Ne_min,Ne_max) for i in range(size)]
-        columns = [str(wavelength) for wavelength in pp[0].result()['spectrum']['wavelength']]
+        spectra_pool = [pool.submit(SimulatedLIBS.worker,input_df,num_of_materials,Te_min,Te_max,Ne_min,Ne_max) for i in range(size)]
+        columns = [str(wavelength) for wavelength in spectra_pool[0].result()['spectrum']['wavelength']]
         for val in input_df.columns.values:
             columns.append(str(val))
         columns.append('Te[eV]')
         columns.append('Ne[cm^-3]'.format(Ne_min=Ne_min))
         output_df = pd.DataFrame(columns=columns)
 
-        for p in pp:
-            intensity = p.result()['spectrum']['intensity'].values.tolist()
-            percentages = p.result()['composition']['percentages'].values.tolist()
+        for spectra in spectra_pool:
+            intensity = spectra.result()['spectrum']['intensity'].values.tolist()
+            percentages = spectra.result()['composition']['percentages'].values.tolist()
             intensity.extend(percentages)
-            intensity.extend(p.result()['name'])
-            intensity.append(p.result()['Te[eV]'])
-            intensity.append(p.result()['Ne[cm^-3]'.format(Ne_min=Ne_min)])
+            intensity.extend(spectra.result()['name'])
+            intensity.append(spectra.result()['Te[eV]'])
+            intensity.append(spectra.result()['Ne[cm^-3]'.format(Ne_min=Ne_min)])
             output_df = pd.concat([output_df,pd.DataFrame(data=[intensity],columns=columns)],ignore_index=True)
 
         output_df.reset_index(drop=True)
-        print(output_df)
         output_df.to_csv(output_csv_file)
+        return output_df
 
     @staticmethod
     def create_random_dataset(elements_list,Te_min, Te_max, Ne_min, Ne_max):
@@ -191,4 +191,5 @@ class SimulatedLIBS(object):
 
 
 if __name__ == '__main__':
-    SimulatedLIBS.create_dataset(input_csv_file=r"C:\Users\marci\Desktop\Python\SimulatedLIBS\data.csv")
+    print(SimulatedLIBS(elements=["H"],percentages=[100]).get_interpolated_spectrum()['intensity'].to_numpy())
+    SimulatedLIBS.create_dataset(input_csv_file='data.csv')
