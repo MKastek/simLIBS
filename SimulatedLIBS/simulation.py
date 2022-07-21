@@ -9,7 +9,15 @@ import numpy as np
 import random
 import os
 from scipy.interpolate import CubicSpline
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
+
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium import webdriver
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+
 import time
 
 
@@ -22,7 +30,7 @@ class SimulatedLIBS(object):
     # filepath to class root folder
     project_root = os.path.dirname(os.path.abspath(__file__))
 
-    def __init__(self,Te=1.0,Ne=10**17,elements=None,percentages=None,resolution = 1000,low_w = 200,upper_w = 1000 ,max_ion_charge = 3):
+    def __init__(self,Te=1.0,Ne=10**17,elements=None,percentages=None,resolution = 1000,low_w = 200,upper_w = 1000 ,max_ion_charge = 3, webscarping = 'static'):
 
         """
         :param Te:  Electron temperature Te [eV]
@@ -42,6 +50,7 @@ class SimulatedLIBS(object):
                 print(str(error))
                 sys.exit(1)
 
+
         self.Te = Te
         self.Ne = Ne
         self.elements = elements
@@ -55,12 +64,14 @@ class SimulatedLIBS(object):
         self.interpolated_spectrum = pd.DataFrame({"wavelength": [], "intensity": []})
 
         # retrieving data
-        self.retrieve_data()
+        if webscarping == 'static':
+            self.retrieve_data_static()
+        elif webscarping == 'dynamic':
+            self.retrieve_data_dynamic()
         # interpolating data
         self.interpolate()
 
-    def retrieve_data(self):
-
+    def get_site(self):
         composition = ""
         spectrum = ""
 
@@ -75,7 +86,7 @@ class SimulatedLIBS(object):
             spectrum += str(self.elements[i])
             spectrum += "0-" + str(self.max_ion_charge)
 
-            if i < len(self.elements)-1:
+            if i < len(self.elements) - 1:
                 composition += "%"
                 spectrum += "%"
         site = "https://physics.nist.gov/cgi-bin/ASD/lines1.pl?composition={}" \
@@ -88,7 +99,36 @@ class SimulatedLIBS(object):
                "&maxcharge={}" \
                "&min_rel_int=0.01" \
                "&libs=1"
-        site = site.format(composition,spectrum,self.low_w,self.upper_w,self.resolution,self.Te,self.Ne,self.max_ion_charge)
+        site = site.format(composition, spectrum, self.low_w, self.upper_w, self.resolution, self.Te, self.Ne,
+                           self.max_ion_charge)
+
+        return site
+
+    def retrieve_data_dynamic(self):
+        options = Options()
+        options.add_argument('--disable-notifications')
+
+        driver = webdriver.Chrome(service=Service(os.path.join('drivers','chromedriver.exe')), options=options)
+        site = self.get_site()
+        driver.get(site)
+        resolution_input = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[1]/div[1]/form/div[3]/div/input")))
+        resolution_input.clear()
+        resolution_input.send_keys(str(self.resolution))
+
+        button_recalculate = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[1]/div[1]/form/button")))
+        button_recalculate.click()
+
+
+        respond = requests.get(site)
+        soup = BeautifulSoup(respond.content, 'html.parser')
+        html_data = soup.find_all("script")
+        html_data = str(html_data[5])
+        self.retrieve_spectrum_from_html(html_data)
+
+
+    def retrieve_data_static(self):
+
+        site = self.get_site()
         respond = requests.get(site)
         soup = BeautifulSoup(respond.content, 'html.parser')
         html_data = soup.find_all("script")
@@ -163,8 +203,8 @@ class SimulatedLIBS(object):
     def create_dataset(input_csv_file, output_csv_file='out_put.csv', size=10, Te_min=1.0, Te_max=2.0, Ne_min=10**17, Ne_max=10**18):
         input_df = pd.read_csv(input_csv_file)
         num_of_materials = len(input_df)
-        pool = ProcessPoolExecutor(4)
-        spectra_pool = [pool.submit(SimulatedLIBS.worker,input_df,num_of_materials,Te_min,Te_max,Ne_min,Ne_max) for i in range(size)]
+        pool = ThreadPoolExecutor(size)
+        spectra_pool = [pool.submit(SimulatedLIBS.worker,input_df,num_of_materials,Te_min,Te_max,Ne_min,Ne_max) for _ in range(size)]
         columns = [str(wavelength) for wavelength in spectra_pool[0].result()['spectrum']['wavelength']]
         for val in input_df.columns.values:
             columns.append(str(val))
@@ -191,5 +231,5 @@ class SimulatedLIBS(object):
 
 
 if __name__ == '__main__':
-    print(SimulatedLIBS(elements=["H"],percentages=[100]).get_interpolated_spectrum()['intensity'].to_numpy())
-    SimulatedLIBS.create_dataset(input_csv_file='data.csv')
+    print(SimulatedLIBS(elements=['W','Fe'],percentages=[50,50], webscarping='dynamic').get_interpolated_spectrum()['intensity'].to_numpy())
+    #SimulatedLIBS.create_dataset(input_csv_file=r'C:\Users\marci\Desktop\Python\SimulatedLIBS\data.csv')
