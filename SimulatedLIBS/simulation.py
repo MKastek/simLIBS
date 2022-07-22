@@ -6,6 +6,7 @@ import re
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import io
 import random
 import os
 from scipy.interpolate import CubicSpline
@@ -50,6 +51,12 @@ class SimulatedLIBS(object):
                 print(str(error))
                 sys.exit(1)
 
+        if sum(percentages) > 100 or Te < 0 or Ne < 0 or low_w > upper_w or upper_w < low_w or max_ion_charge < 0:
+            try:
+                raise (MyError("Error in SimulatedLLIBS"))
+            except MyError as error:
+                print(str(error))
+                sys.exit(1)
 
         self.Te = Te
         self.Ne = Ne
@@ -66,10 +73,10 @@ class SimulatedLIBS(object):
         # retrieving data
         if webscarping == 'static':
             self.retrieve_data_static()
+            self.interpolate()
         elif webscarping == 'dynamic':
             self.retrieve_data_dynamic()
         # interpolating data
-        self.interpolate()
 
     def get_site(self):
         composition = ""
@@ -107,6 +114,7 @@ class SimulatedLIBS(object):
     def retrieve_data_dynamic(self):
         options = Options()
         options.add_argument('--disable-notifications')
+        options.headless = True
 
         driver = webdriver.Chrome(service=Service(os.path.join('drivers','chromedriver.exe')), options=options)
         site = self.get_site()
@@ -118,12 +126,21 @@ class SimulatedLIBS(object):
         button_recalculate = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[1]/div[1]/form/button")))
         button_recalculate.click()
 
+        button_csv = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[2]/button[2]")))
+        button_csv.click()
 
-        respond = requests.get(site)
-        soup = BeautifulSoup(respond.content, 'html.parser')
-        html_data = soup.find_all("script")
-        html_data = str(html_data[5])
-        self.retrieve_spectrum_from_html(html_data)
+        driver.switch_to.window((driver.window_handles[1]))
+        time.sleep(0.2)
+
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        df = pd.read_csv(io.StringIO(soup.pre.text), sep=",")
+        self.raw_spectrum['wavelength'] = df['Wavelength (nm)']
+        self.raw_spectrum['intensity'] = df['Sum(calc)']
+
+        self.interpolated_spectrum['wavelength'] = df['Wavelength (nm)']
+        self.interpolated_spectrum['intensity'] = df['Sum(calc)']
+
+
 
 
     def retrieve_data_static(self):
@@ -133,7 +150,6 @@ class SimulatedLIBS(object):
         soup = BeautifulSoup(respond.content, 'html.parser')
         html_data = soup.find_all("script")
         html_data = str(html_data[5])
-
         self.retrieve_spectrum_from_html(html_data)
 
     def retrieve_spectrum_from_html(self,html_data):
@@ -156,13 +172,13 @@ class SimulatedLIBS(object):
         # none negative values
         y = [0 if i < 0 else i for i in y]
 
-        self.interpolated_spectrum['wavelength'] = np.round(x, 1)
-        self.interpolated_spectrum['intensity'] = np.round(y, 1)
+        self.interpolated_spectrum['wavelength'] = np.round(x, 3)
+        self.interpolated_spectrum['intensity'] = np.round(y, 3)
 
     def plot(self,color=(random.random(), random.random(), random.random()),title='Simulated LIBS'):
 
         # plot with random colors
-        plt.plot(self.interpolated_spectrum["wavelength"],self.interpolated_spectrum["intensity"],
+        plt.plot(self.interpolated_spectrum["wavelength"],self.interpolated_spectrum["intensity"]/max(self.interpolated_spectrum["intensity"]),
                  label=str(self.elements)+str(self.percentages),
                  color=color)
         plt.grid()
@@ -231,5 +247,10 @@ class SimulatedLIBS(object):
 
 
 if __name__ == '__main__':
-    print(SimulatedLIBS(elements=['W','Fe'],percentages=[50,50], webscarping='dynamic').get_interpolated_spectrum()['intensity'].to_numpy())
-    #SimulatedLIBS.create_dataset(input_csv_file=r'C:\Users\marci\Desktop\Python\SimulatedLIBS\data.csv')
+    SL_dynamic = SimulatedLIBS(elements=['W', 'Fe'], percentages=[50, 50], webscarping='dynamic', resolution = 8000)
+    SL_dynamic.plot(color='red')
+    print(SL_dynamic.raw_spectrum)
+    SL_static = SimulatedLIBS(elements=['W', 'Fe'], percentages=[50, 50], webscarping='static', resolution = 8000)
+    SL_static.plot(color='blue')
+    print(SL_static.raw_spectrum)
+    plt.show()
