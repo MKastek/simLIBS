@@ -42,6 +42,7 @@ class SimulatedLIBS(object):
         :param low_w:   Lower wavelength [nm]
         :param upper_w: Upper wavelength [nm]
         :param max_ion_charge:  Maximal ion charge
+        :param webscarping: Type of
         """
 
         if sum(percentages) > 100 or Te < 0 or Ne < 0 or low_w > upper_w or upper_w < low_w or max_ion_charge < 0:
@@ -51,7 +52,7 @@ class SimulatedLIBS(object):
                 print(str(error))
                 sys.exit(1)
 
-        if sum(percentages) > 100 or Te < 0 or Ne < 0 or low_w > upper_w or upper_w < low_w or max_ion_charge < 0:
+        if len(elements) != len(percentages):
             try:
                 raise (MyError("Error in SimulatedLLIBS"))
             except MyError as error:
@@ -70,11 +71,13 @@ class SimulatedLIBS(object):
         self.raw_spectrum = pd.DataFrame({"wavelength": [], "intensity": []})
         self.interpolated_spectrum = pd.DataFrame({"wavelength": [], "intensity": []})
 
+        self.webscraping = webscarping
         # retrieving data
         if webscarping == 'static':
             self.retrieve_data_static()
             self.interpolate()
         elif webscarping == 'dynamic':
+            self.df_scrapped = None
             self.retrieve_data_dynamic()
         # interpolating data
 
@@ -133,16 +136,13 @@ class SimulatedLIBS(object):
         time.sleep(0.2)
 
         soup = BeautifulSoup(driver.page_source, 'html.parser')
-        df = pd.read_csv(io.StringIO(soup.pre.text), sep=",")
-        self.raw_spectrum['wavelength'] = df['Wavelength (nm)']
-        self.raw_spectrum['intensity'] = df['Sum(calc)']
+        self.df_scrapped = pd.read_csv(io.StringIO(soup.pre.text), sep=",")
+        self.raw_spectrum['wavelength'] = self.df_scrapped['Wavelength (nm)']
+        self.raw_spectrum['intensity'] = self.df_scrapped['Sum(calc)']
 
-        self.interpolated_spectrum['wavelength'] = df['Wavelength (nm)']
-        self.interpolated_spectrum['intensity'] = df['Sum(calc)']
-
-
-
-
+        self.interpolated_spectrum['wavelength'] = self.df_scrapped['Wavelength (nm)']
+        self.interpolated_spectrum['intensity'] = self.df_scrapped['Sum(calc)']
+        
     def retrieve_data_static(self):
 
         site = self.get_site()
@@ -178,13 +178,16 @@ class SimulatedLIBS(object):
     def plot(self,color=(random.random(), random.random(), random.random()),title='Simulated LIBS'):
 
         # plot with random colors
-        plt.plot(self.interpolated_spectrum["wavelength"],self.interpolated_spectrum["intensity"]/max(self.interpolated_spectrum["intensity"]),
+        plt.plot(self.interpolated_spectrum["wavelength"],self.interpolated_spectrum["intensity"],
                  label=str(self.elements)+str(self.percentages),
                  color=color)
         plt.grid()
         plt.title(title)
         plt.xlabel(r'$\lambda$ [nm]')
         plt.ylabel('Line Intensity [a.u.]')
+
+    def plot_ion_spectra(self):
+        pass
 
     def get_interpolated_spectrum(self):
         """
@@ -197,6 +200,10 @@ class SimulatedLIBS(object):
         :return:  raw spectrum
         """
         return self.raw_spectrum
+
+    def get_ion_spectra(self):
+        if self.webscraping == 'dynamic' and self.df_scrapped is not None:
+            return self.df_scrapped
 
     def save_to_csv(self,filepath):
         """
