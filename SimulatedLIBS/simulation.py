@@ -257,7 +257,7 @@ class SimulatedLIBS(object):
 
 if __name__ == '__main__':
     libs = SimulatedLIBS(Te=1.0, Ne=10 ** 17, elements=['W', 'Fe', 'Mo'], percentages=[50, 25, 25],
-                                    resolution=1000, low_w=200, upper_w=1000, max_ion_charge=3, webscraping='static')
-    libs.plot(color='blue', title='W Fe Mo composition - static webscraping')
+                                    resolution=1000, low_w=200, upper_w=1000, max_ion_charge=3, webscraping='dynamic')
+    libs.plot(color='blue', title='W Fe Mo composition - dynamic webscraping')
     plt.show()
 
