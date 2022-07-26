@@ -32,7 +32,7 @@ class SimulatedLIBS(object):
     # filepath to class root folder
     project_root = os.path.dirname(os.path.abspath(__file__))
 
-    def __init__(self,Te=1.0,Ne=10**17,elements=None,percentages=None,resolution = 1000,low_w = 200,upper_w = 1000 ,max_ion_charge = 3, webscarping = 'static'):
+    def __init__(self,Te=1.0,Ne=10**17,elements=None,percentages=None,resolution = 1000,low_w = 200,upper_w = 1000 ,max_ion_charge = 3, webscraping = 'static'):
 
         """
         :param Te:  Electron temperature Te [eV]
@@ -72,12 +72,12 @@ class SimulatedLIBS(object):
         self.raw_spectrum = pd.DataFrame({"wavelength": [], "intensity": []})
         self.interpolated_spectrum = pd.DataFrame({"wavelength": [], "intensity": []})
 
-        self.webscraping = webscarping
+        self.webscraping = webscraping
         # retrieving data
-        if webscarping == 'static':
+        if webscraping == 'static':
             self.retrieve_data_static()
             self.interpolate()
-        elif webscarping == 'dynamic':
+        elif webscraping == 'dynamic':
             self.ion_spectra = None
             self.retrieve_data_dynamic()
         # interpolating data
@@ -207,8 +207,8 @@ class SimulatedLIBS(object):
 
     def get_ion_spectra(self):
 
-        if self.webscraping == 'dynamic' and self.df_scrapped is not None:
-            return self.df_scrapped
+        if self.webscraping == 'dynamic' and self.ion_spectra is not None:
+            return self.ion_spectra
 
     def save_to_csv(self,filepath):
         """
@@ -256,8 +256,8 @@ class SimulatedLIBS(object):
 
 
 if __name__ == '__main__':
-    SL_dynamic = SimulatedLIBS(elements=['W', 'Fe'], percentages=[50, 50], webscarping='dynamic', resolution = 3000)
-    #SL_dynamic.plot(color='red')
-    SL_dynamic.plot_ion_spectra()
+    libs = SimulatedLIBS(Te=1.0, Ne=10 ** 17, elements=['W', 'Fe', 'Mo'], percentages=[50, 25, 25],
+                                    resolution=1000, low_w=200, upper_w=1000, max_ion_charge=3, webscraping='static')
+    libs.plot(color='blue', title='W Fe Mo composition - static webscraping')
     plt.show()
 

@@ -40,7 +40,7 @@ libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','H','Be'],perce
 ```python
 libs.plot(color='blue', title='W Be H composition')
 ```
-![](plot.png)
+![](images/plot_static.png)
 
 ### Save to file
 ```python
@@ -61,8 +61,14 @@ libs.get_raw_spectrum()
 ### Dynamic websraping
 ```python
 libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','H','Be'],percentages=[50,25,25],
-                                resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3, webscraping='static')
+                                resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3, webscraping='dynamic')
 ```
+
+### Plot
+```python
+libs.plot(color='blue', title='W Be H composition')
+```
+![](images/plot_dynamic.png)
 
 ### Random dataset of samples
 Based on .csv file with chemical composition of samples, one can generate dataset of simulated LIBS measurements  
