@@ -18,6 +18,7 @@ from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+import chromedriver_autoinstaller
 
 import time
 
@@ -77,7 +78,7 @@ class SimulatedLIBS(object):
             self.retrieve_data_static()
             self.interpolate()
         elif webscarping == 'dynamic':
-            self.df_scrapped = None
+            self.ion_spectra = None
             self.retrieve_data_dynamic()
         # interpolating data
 
@@ -115,6 +116,8 @@ class SimulatedLIBS(object):
         return site
 
     def retrieve_data_dynamic(self):
+        chromedriver_autoinstaller.install()
+
         options = Options()
         options.add_argument('--disable-notifications')
         options.headless = True
@@ -136,12 +139,12 @@ class SimulatedLIBS(object):
         time.sleep(0.2)
 
         soup = BeautifulSoup(driver.page_source, 'html.parser')
-        self.df_scrapped = pd.read_csv(io.StringIO(soup.pre.text), sep=",")
-        self.raw_spectrum['wavelength'] = self.df_scrapped['Wavelength (nm)']
-        self.raw_spectrum['intensity'] = self.df_scrapped['Sum(calc)']
+        self.ion_spectra = pd.read_csv(io.StringIO(soup.pre.text), sep=",").fillna(0)
+        self.raw_spectrum['wavelength'] = self.ion_spectra['Wavelength (nm)']
+        self.raw_spectrum['intensity'] = self.ion_spectra['Sum(calc)']
 
-        self.interpolated_spectrum['wavelength'] = self.df_scrapped['Wavelength (nm)']
-        self.interpolated_spectrum['intensity'] = self.df_scrapped['Sum(calc)']
+        self.interpolated_spectrum['wavelength'] = self.ion_spectra['Wavelength (nm)']
+        self.interpolated_spectrum['intensity'] = self.ion_spectra['Sum(calc)']
         
     def retrieve_data_static(self):
 
@@ -187,7 +190,8 @@ class SimulatedLIBS(object):
         plt.ylabel('Line Intensity [a.u.]')
 
     def plot_ion_spectra(self):
-        pass
+
+        self.ion_spectra.drop(['Sum(calc)'],axis = 1).plot(x='Wavelength (nm)',ylabel = 'Line Intensity [a.u.]',title='Ion spectra', grid=True)
 
     def get_interpolated_spectrum(self):
         """
@@ -202,6 +206,7 @@ class SimulatedLIBS(object):
         return self.raw_spectrum
 
     def get_ion_spectra(self):
+
         if self.webscraping == 'dynamic' and self.df_scrapped is not None:
             return self.df_scrapped
 
@@ -248,16 +253,11 @@ class SimulatedLIBS(object):
         output_df.to_csv(output_csv_file)
         return output_df
 
-    @staticmethod
-    def create_random_dataset(elements_list,Te_min, Te_max, Ne_min, Ne_max):
-        pass
 
 
 if __name__ == '__main__':
-    SL_dynamic = SimulatedLIBS(elements=['W', 'Fe'], percentages=[50, 50], webscarping='dynamic', resolution = 8000)
-    SL_dynamic.plot(color='red')
-    print(SL_dynamic.raw_spectrum)
-    SL_static = SimulatedLIBS(elements=['W', 'Fe'], percentages=[50, 50], webscarping='static', resolution = 8000)
-    SL_static.plot(color='blue')
-    print(SL_static.raw_spectrum)
+    SL_dynamic = SimulatedLIBS(elements=['W', 'Fe'], percentages=[50, 50], webscarping='dynamic', resolution = 3000)
+    #SL_dynamic.plot(color='red')
+    SL_dynamic.plot_ion_spectra()
     plt.show()
+

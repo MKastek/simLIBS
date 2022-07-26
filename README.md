@@ -18,7 +18,7 @@ pip install SimulatedLIBS
 ```python
 from SimulatedLIBS import simulation
 ```
-## Example
+## Example 
 Parameters:  
 - Te - electron temperature [eV]
 - Ne - electron density [cm^-3]
@@ -27,9 +27,13 @@ Parameters:
 - resoulution
 - wavelength range: low_w, upper_w
 - maximal ion charge: max_ion_charge 
+- websraping: 'static' or 'dynamic'
+
+
+### Static websraping
 ```python
 libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','H','Be'],percentages=[50,25,25],
-                                resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3)
+                                resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3, webscraping='static')
 ```
 
 ### Plot
@@ -53,6 +57,11 @@ libs.get_interpolated_spectrum()
 Raw retrieved data from NIST
 ```python
 libs.get_raw_spectrum()
+```
+### Dynamic websraping
+```python
+libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','H','Be'],percentages=[50,25,25],
+                                resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3, webscraping='static')
 ```
 
 ### Random dataset of samples
