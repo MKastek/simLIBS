@@ -70,6 +70,12 @@ libs.plot(color='blue', title='W Be H composition')
 ```
 ![](images/plot_dynamic.png)
 
+### Ion spectra
+After simulation with parameter websraping = dynamic, ion spectra are stored in ion_spectra (pd.DataFrame) and can plotted.  
+```python
+libs.plot_ion_spectra()
+```
+![](images/plot_ion.png)
 ### Random dataset of samples
 Based on .csv file with chemical composition of samples, one can generate dataset of simulated LIBS measurements  
 with different Te and Ne values
