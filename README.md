@@ -32,13 +32,13 @@ Parameters:
 
 ### Static websraping
 ```python
-libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','H','Be'],percentages=[50,25,25],
+libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','Fe','Mo'],percentages=[50,25,25],
                                 resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3, webscraping='static')
 ```
 
 ### Plot
 ```python
-libs.plot(color='blue', title='W Be H composition')
+libs.plot(color='blue', title='W Fe Mo composition')
 ```
 ![](images/plot_static.png)
 
@@ -60,13 +60,13 @@ libs.get_raw_spectrum()
 ```
 ### Dynamic websraping
 ```python
-libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','H','Be'],percentages=[50,25,25],
+libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','Fe','Mo'],percentages=[50,25,25],
                                 resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3, webscraping='dynamic')
 ```
 
 ### Plot
 ```python
-libs.plot(color='blue', title='W Be H composition')
+libs.plot(color='blue', title='W Fe Mo composition')
 ```
 ![](images/plot_dynamic.png)
 
