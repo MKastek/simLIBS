@@ -75,7 +75,7 @@ After simulation with parameter websraping = dynamic, ion spectra are stored in 
 ```python
 libs.plot_ion_spectra()
 ```
-![](images/plot_ion.png)
+![](images/plot_ion_spectra.png)
 ### Random dataset of samples
 Based on .csv file with chemical composition of samples, one can generate dataset of simulated LIBS measurements  
 with different Te and Ne values
