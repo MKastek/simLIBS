@@ -191,7 +191,7 @@ class SimulatedLIBS(object):
 
     def plot_ion_spectra(self):
 
-        self.ion_spectra.drop(['Sum(calc)'],axis = 1).plot(x='Wavelength (nm)',ylabel = 'Line Intensity [a.u.]',title='Ion spectra', grid=True)
+        self.ion_spectra.drop(['Sum(calc)'],axis = 1).plot(x=r'$\lambda$ [nm]',ylabel = 'Line Intensity [a.u.]',title='Ion spectra', grid=True)
 
     def get_interpolated_spectrum(self):
         """

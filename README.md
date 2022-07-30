@@ -71,7 +71,7 @@ libs.plot(color='blue', title='W Fe Mo composition')
 ![](images/plot_dynamic.png)
 
 ### Ion spectra
-After simulation with parameter websraping = dynamic, ion spectra are stored in ion_spectra (pd.DataFrame) and can plotted.  
+After simulation with parameter websraping = dynamic, ion spectra are stored in ion_spectra (pd.DataFrame) and can be plotted.  
 ```python
 libs.plot_ion_spectra()
 ```
