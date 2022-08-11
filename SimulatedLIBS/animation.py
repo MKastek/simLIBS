@@ -25,7 +25,7 @@ def update_plot(index, parameter, wavelength_range, intensity_range, parameter_r
     plt.xlabel(r"$\lambda$ [nm]")
     plt.ylabel("Line intensity [a.u]")
     plt.grid()
-    plt.title('Elements: [\'W\', \'Fe\', \'Mo\'] \n' +parameter+" : " +'{:0.3e}'.format(parameter_range[index]) +' '+unit)
+    plt.title("Elements: ['W', 'Fe', 'Mo'] \n" +parameter+" : " +'{:0.3e}'.format(parameter_range[index]) +' '+unit)
 
 
 def animate_resolution(elements, percentages):

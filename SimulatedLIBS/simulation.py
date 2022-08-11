@@ -43,7 +43,7 @@ class SimulatedLIBS(object):
         :param low_w:   Lower wavelength [nm]
         :param upper_w: Upper wavelength [nm]
         :param max_ion_charge:  Maximal ion charge
-        :param webscarping: Type of
+        :param webscarping: Type of webscraping: 'static' or 'dynamic'
         """
 
         if sum(percentages) > 100 or Te < 0 or Ne < 0 or low_w > upper_w or upper_w < low_w or max_ion_charge < 0:
@@ -79,11 +79,23 @@ class SimulatedLIBS(object):
         # retrieving data
         if webscraping == 'static':
             self.retrieve_data_static()
+            # interpolating data
             self.interpolate()
         elif webscraping == 'dynamic':
             self.ion_spectra = None
             self.retrieve_data_dynamic()
-        # interpolating data
+
+    def __repr__(self):
+        return "SimulatedLIBS('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(self.Te, self.Ne,
+                                                                                            self.elements,
+                                                                                            self.percentages,
+                                                                                            self.resolution, self.low_w,
+                                                                                            self.upper_w,
+                                                                                            self.max_ion_charge,
+                                                                                            self.webscraping)
+
+    def __str__(self):
+        return "Te: '{}' eV Ne: '{:0.3e}' cm^-3  elements: '{}' percentages: '{}'".format(self.Te, float(self.Ne), self.elements, self.percentages)
 
     def get_site(self):
         composition = ""
@@ -119,6 +131,9 @@ class SimulatedLIBS(object):
         return site
 
     def retrieve_data_dynamic(self):
+        """
+        retrieve data with dynamic webscraping (selenium)
+        """
         chromedriver_autoinstaller.install()
 
         options = Options()
@@ -150,6 +165,9 @@ class SimulatedLIBS(object):
         self.interpolated_spectrum['intensity'] = self.ion_spectra['Sum(calc)']
         
     def retrieve_data_static(self):
+        """
+        retrieve data with static webscraping (beautiful soup)
+        """
 
         site = self.get_site()
         respond = requests.get(site)
@@ -194,7 +212,7 @@ class SimulatedLIBS(object):
 
     def plot_ion_spectra(self):
 
-        self.ion_spectra.drop(['Sum(calc)'],axis = 1).plot(x=r'$\lambda$ [nm]',ylabel = 'Line Intensity [a.u.]',title='Ion spectra', grid=True)
+        self.ion_spectra.drop(['Sum(calc)'],axis = 1).plot(x='Wavelength (nm)',xlabel=r'$\lambda$ [nm]',ylabel = 'Line Intensity [a.u.]',title='Ion spectra', grid=True)
 
     def get_interpolated_spectrum(self):
         """
@@ -214,14 +232,14 @@ class SimulatedLIBS(object):
             return self.ion_spectra
 
     def save_to_csv(self,filepath):
-        """
-        :param filepath:
-        :return:
-        """
+
         self.interpolated_spectrum.to_csv(path_or_buf=filepath)
 
     @staticmethod
     def worker(input_df, num_of_materials,Te_min, Te_max, Ne_min, Ne_max):
+        """
+
+        """
         percentages = input_df.iloc[random.randrange(num_of_materials)].values[:-1]
         elements = input_df.iloc[random.randrange(num_of_materials)].keys().values[:-1]
         name = input_df.iloc[random.randrange(num_of_materials)]['name']
@@ -232,6 +250,9 @@ class SimulatedLIBS(object):
 
     @staticmethod
     def create_dataset(input_csv_file, output_csv_file='out_put.csv', size=10, Te_min=1.0, Te_max=2.0, Ne_min=10**17, Ne_max=10**18):
+        """
+
+        """
         input_df = pd.read_csv(input_csv_file)
         num_of_materials = len(input_df)
         pool = ThreadPoolExecutor(size)
@@ -260,7 +281,6 @@ class SimulatedLIBS(object):
 
 if __name__ == '__main__':
     libs = SimulatedLIBS(Te=1.0, Ne=10 ** 17, elements=['W','Fe','Mo'],percentages=[50,25,25],
-                                    resolution=1000, low_w=200, upper_w=1000, max_ion_charge=3, webscraping='dynamic')
-    libs.plot_ion_spectra()
-    plt.show()
+                                    resolution=1000, low_w=200, upper_w=1000, max_ion_charge=3, webscraping='static')
+    print(libs)
 

@@ -41,7 +41,7 @@ libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','Fe','Mo'],perc
 ```python
 libs.plot(color='blue', title='W Fe Mo composition')
 ```
-![](images/plot_static.png)
+![](https://github.com/MKastek/SimulatedLIBS/blob/master/images/plot_static.png?raw=True)
 
 ### Save to file
 ```python
@@ -69,14 +69,14 @@ libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','Fe','Mo'],perc
 ```python
 libs.plot(color='blue', title='W Fe Mo composition')
 ```
-![](images/plot_dynamic.png)
+![](https://github.com/MKastek/SimulatedLIBS/blob/master/images/plot_dynamic.png?raw=True)
 
 ### Ion spectra
 After simulation with parameter websraping = dynamic, ion spectra are stored in ion_spectra (pd.DataFrame) and can be plotted.  
 ```python
 libs.plot_ion_spectra()
 ```
-![](images/plot_ion_spectra.png)
+![](https://github.com/MKastek/SimulatedLIBS/blob/master/images/plot_ion_spectra.png?raw=True)
 ### Random dataset of samples
 Based on .csv file with chemical composition of samples, one can generate dataset of simulated LIBS measurements  
 with different Te and Ne values
@@ -109,8 +109,8 @@ Example of output .csv file:
 SimulatedLIBS can be helpful in creating LIBS animations mostly for educational purpose.
 
 #### Resolution animation
-![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_resolution.gif)
+![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_resolution.gif?raw=True)
 #### Electron temperature animation
-![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_temperature.gif)
+![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_temperature.gif?raw=True)
 #### Electron density animation
-![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_density.gif)
+![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_density.gif?raw=True)
