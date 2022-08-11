@@ -109,7 +109,8 @@ Example of output .csv file:
 SimulatedLIBS can be helpful in creating LIBS animations mostly for educational purpose.
 
 #### Resolution animation
-
+![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_resolution.gif)
 #### Electron temperature animation
-
+![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_temperature.gif)
 #### Electron density animation
+![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_density.gif)
