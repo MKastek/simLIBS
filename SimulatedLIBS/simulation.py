@@ -11,7 +11,7 @@ import random
 import os
 from scipy.interpolate import CubicSpline
 from concurrent.futures import ThreadPoolExecutor
-
+import math
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
@@ -61,7 +61,10 @@ class SimulatedLIBS(object):
                 sys.exit(1)
 
         self.Te = Te
-        self.Ne = Ne
+
+        self.Ne = round(Ne, 3 - int(math.floor(math.log10(abs(Ne)))) - 1)
+        self.Ne = re.sub(r'\+', '', str(self.Ne))
+
         self.elements = elements
         self.percentages = percentages
         self.resolution = resolution
@@ -125,7 +128,7 @@ class SimulatedLIBS(object):
         driver = webdriver.Chrome(service=Service(os.path.join('drivers','chromedriver.exe')), options=options)
         site = self.get_site()
         driver.get(site)
-        resolution_input = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[1]/div[1]/form/div[3]/div/input")))
+        resolution_input = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[1]/div[1]/form/div[3]/div/input")))
         resolution_input.clear()
         resolution_input.send_keys(str(self.resolution))
 
