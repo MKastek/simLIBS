@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='SimulatedLIBS',
-    version='0.1.3',
+    version='0.1.4',
     packages=setuptools.find_packages(),
     url='https://github.com/MKastek/SimulatedLIBS',
     license='MIT license',
@@ -16,7 +16,8 @@ setuptools.setup(
                       'requests',
                       'bs4',
                       'scipy',
-                      'selenium'],
+                      'selenium',
+                      'webdriver-manager'],
     author_email='marcin.kastek.stud@pw.edu.pl',
     description='SimulatedLIBS provides simple Python class to simulate LIBS spectra with NIST LIBS Database interface',
     long_description=long_description,

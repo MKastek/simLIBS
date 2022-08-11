@@ -18,7 +18,7 @@ from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-import chromedriver_autoinstaller
+from webdriver_manager.chrome import ChromeDriverManager
 
 import time
 
@@ -83,10 +83,15 @@ class SimulatedLIBS(object):
             self.interpolate()
         elif webscraping == 'dynamic':
             self.ion_spectra = None
+            options = Options()
+            options.add_argument('--disable-notifications')
+            options.headless = True
+
+            self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
             self.retrieve_data_dynamic()
 
     def __repr__(self):
-        return "SimulatedLIBS('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(self.Te, self.Ne,
+        return "SimulatedLIBS(Te: '{}', Ne: '{:0.3e}', elements: '{}', percentages: '{}', resolution: '{}', low_w: '{}', upper_w: '{}', max_ion_charge: '{}', webscraping: '{}')".format(self.Te, float(self.Ne),
                                                                                             self.elements,
                                                                                             self.percentages,
                                                                                             self.resolution, self.low_w,
@@ -134,29 +139,22 @@ class SimulatedLIBS(object):
         """
         retrieve data with dynamic webscraping (selenium)
         """
-        chromedriver_autoinstaller.install()
-
-        options = Options()
-        options.add_argument('--disable-notifications')
-        options.headless = True
-
-        driver = webdriver.Chrome(service=Service(os.path.join('drivers','chromedriver.exe')), options=options)
         site = self.get_site()
-        driver.get(site)
-        resolution_input = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[1]/div[1]/form/div[3]/div/input")))
+        self.driver.get(site)
+        resolution_input = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[1]/div[1]/form/div[3]/div/input")))
         resolution_input.clear()
         resolution_input.send_keys(str(self.resolution))
 
-        button_recalculate = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[1]/div[1]/form/button")))
+        button_recalculate = WebDriverWait(self.driver, 2).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[1]/div[1]/form/button")))
         button_recalculate.click()
 
-        button_csv = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[2]/button[2]")))
+        button_csv = WebDriverWait(self.driver, 2).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[2]/button[2]")))
         button_csv.click()
 
-        driver.switch_to.window((driver.window_handles[1]))
+        self.driver.switch_to.window((self.driver.window_handles[1]))
         time.sleep(0.2)
 
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        soup = BeautifulSoup(self.driver.page_source, 'html.parser')
         self.ion_spectra = pd.read_csv(io.StringIO(soup.pre.text), sep=",").fillna(0)
         self.raw_spectrum['wavelength'] = self.ion_spectra['Wavelength (nm)']
         self.raw_spectrum['intensity'] = self.ion_spectra['Sum(calc)']
@@ -230,13 +228,15 @@ class SimulatedLIBS(object):
 
         if self.webscraping == 'dynamic' and self.ion_spectra is not None:
             return self.ion_spectra
+        else:
+            print("Function works with webscraping parameter 'dynamic'")
 
     def save_to_csv(self,filepath):
 
         self.interpolated_spectrum.to_csv(path_or_buf=filepath)
 
     @staticmethod
-    def worker(input_df, num_of_materials,Te_min, Te_max, Ne_min, Ne_max):
+    def worker(input_df, num_of_materials,Te_min, Te_max, Ne_min, Ne_max, webscraping):
         """
 
         """
@@ -245,18 +245,18 @@ class SimulatedLIBS(object):
         name = input_df.iloc[random.randrange(num_of_materials)]['name']
         Te = random.uniform(Te_min, Te_max)
         Ne = random.uniform(1, Ne_max/Ne_min)
-        fun = SimulatedLIBS(Te=Te,Ne=Ne,elements=elements, percentages=percentages).get_interpolated_spectrum()
+        fun = SimulatedLIBS(Te=Te,Ne=Ne,elements=elements, percentages=percentages, webscraping=webscraping).get_interpolated_spectrum()
         return { 'spectrum': fun, 'composition': pd.DataFrame({'elements':elements, 'percentages': percentages}), 'name': name, 'Te[eV]': Te, 'Ne[cm^-3]': Ne}
 
     @staticmethod
-    def create_dataset(input_csv_file, output_csv_file='out_put.csv', size=10, Te_min=1.0, Te_max=2.0, Ne_min=10**17, Ne_max=10**18):
+    def create_dataset(input_csv_file, output_csv_file='out_put.csv', size=10, Te_min=1.0, Te_max=2.0, Ne_min=10**17, Ne_max=10**18, websraping = 'static'):
         """
 
         """
         input_df = pd.read_csv(input_csv_file)
         num_of_materials = len(input_df)
         pool = ThreadPoolExecutor(size)
-        spectra_pool = [pool.submit(SimulatedLIBS.worker,input_df,num_of_materials,Te_min,Te_max,Ne_min,Ne_max) for _ in range(size)]
+        spectra_pool = [pool.submit(SimulatedLIBS.worker,input_df,num_of_materials,Te_min,Te_max,Ne_min,Ne_max, websraping) for _ in range(size)]
         columns = [str(wavelength) for wavelength in spectra_pool[0].result()['spectrum']['wavelength']]
         for val in input_df.columns.values:
             columns.append(str(val))
@@ -280,7 +280,6 @@ class SimulatedLIBS(object):
 
 
 if __name__ == '__main__':
-    libs = SimulatedLIBS(Te=1.0, Ne=10 ** 17, elements=['W','Fe','Mo'],percentages=[50,25,25],
-                                    resolution=1000, low_w=200, upper_w=1000, max_ion_charge=3, webscraping='static')
-    print(libs)
-
+    libs_dynamic = SimulatedLIBS(Te=1.2, Ne=10 ** 17, elements=['Fe', 'Mo', 'Ni', 'Cr'],
+                                            percentages=[90, 5, 3, 2], resolution=8000, low_w=200, upper_w=1000,
+                                            webscraping='dynamic')
