@@ -49,7 +49,7 @@ libs.save_to_csv('filename.csv')
 ```
 
 ### Interpolated spectrum
-SimulatedLIBS interpolates retrieved data from NIST with cubic splines
+SimulatedLIBS interpolates retrieved data from NIST with cubic splines.
 ```python
 libs.get_interpolated_spectrum()
 ```
@@ -79,7 +79,7 @@ libs.plot_ion_spectra()
 ![](https://github.com/MKastek/SimulatedLIBS/blob/master/images/plot_ion_spectra.png?raw=True)
 ### Random dataset of samples
 Based on .csv file with chemical composition of samples, one can generate dataset of simulated LIBS measurements  
-with different Te and Ne values
+with different Te and Ne values.
 
 Example of input .csv file:
 
@@ -108,9 +108,12 @@ Example of output .csv file:
 ### Animations
 SimulatedLIBS can be helpful in creating LIBS animations mostly for educational purpose.
 
-#### Resolution animation
+#### Resolution animation  
+Changes in resolution in range: 500-10000.  
 ![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_resolution.gif?raw=True)
-#### Electron temperature animation
+#### Electron temperature animation  
+Changes in electron temperature Te in range: 0.5-5 eV.
 ![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_temperature.gif?raw=True)
 #### Electron density animation
+Changes in electron density Ne in range: 0.7-1.3 e+17 [cm^-3].
 ![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_density.gif?raw=True)
