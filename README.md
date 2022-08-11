@@ -105,3 +105,11 @@ Example of output .csv file:
 |  4 |       0 |   121.7 |   143.1 |   140.5 |   115.3 | ...   |0 |  84 | 1.08 | 9.23e+17 |
 
 
+### Animations
+SimulatedLIBS can be helpful in creating LIBS animations mostly for educational purpose.
+
+#### Resolution animation
+
+#### Electron temperature animation
+
+#### Electron density animation
