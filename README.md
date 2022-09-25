@@ -59,7 +59,7 @@ Raw retrieved data from NIST
 ```python
 libs.get_raw_spectrum()
 ```
-### Dynamic websraping
+### Dynamic webscraping
 ```python
 libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','Fe','Mo'],percentages=[50,25,25],
                                 resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3, webscraping='dynamic')
