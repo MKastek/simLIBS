@@ -1,6 +1,10 @@
 # Simulated LIBS
 
+<<<<<<< HEAD
 *SimulatedLIBS* provides simple Python class to simulate LIBS spectra with NIST LIBS Database interface.
+=======
+*SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.
+>>>>>>> 15b31413fd5d92d6a0ea4c105d0ea7af02dcb0ae
 *SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.
 
 Project created for **B.Eng. thesis**:
@@ -60,7 +64,7 @@ Raw retrieved data from NIST
 ```python
 libs.get_raw_spectrum()
 ```
-### Dynamic websraping
+### Dynamic webscraping
 ```python
 libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','Fe','Mo'],percentages=[50,25,25],
                                 resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3, webscraping='dynamic')
