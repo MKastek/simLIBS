@@ -1,8 +1,8 @@
 # Simulated LIBS
 
+![Tests](https://github.com/MKastek/SimulatedLIBS/actions/workflows/test.yml/badge.svg)  
 
-*SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.
-
+*SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.  
 *SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.
 
 Project created for **B.Eng. thesis**:
