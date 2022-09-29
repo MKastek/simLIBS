@@ -1,10 +1,8 @@
 # Simulated LIBS
 
-<<<<<<< HEAD
-*SimulatedLIBS* provides simple Python class to simulate LIBS spectra with NIST LIBS Database interface.
-=======
+
 *SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.
->>>>>>> 15b31413fd5d92d6a0ea4c105d0ea7af02dcb0ae
+
 *SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.
 
 Project created for **B.Eng. thesis**:
