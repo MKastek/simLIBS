@@ -1,13 +1,13 @@
 # Simulated LIBS
 
-*SimulatedLIBS* provides simple Python class to simulate LIBS spectra with NIST LIBS Database interface.  
+*SimulatedLIBS* provides simple Python class to simulate LIBS spectra with NIST LIBS Database interface.
 *SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.
 
-Project created for **B.Eng. thesis**:  
+Project created for **B.Eng. thesis**:
 Computer methods of the identification of the elements in optical spectra obtained by Laser Induced Breakdown Spectroscopy.
 
-**Thesis supervisor**: Paweł Gąsior PhD  
-e-mail: pawel.gasior@ifpilm.pl  
+**Thesis supervisor**: Paweł Gąsior PhD
+e-mail: pawel.gasior@ifpilm.pl
 Institute of Plasma Physics and Laser Microfusion - IPPLM
 
 
@@ -15,19 +15,20 @@ Institute of Plasma Physics and Laser Microfusion - IPPLM
 ```python
 pip install SimulatedLIBS
 ```
-## Import 
+## Import
+
 ```python
 from SimulatedLIBS import simulation
 ```
-## Example 
-Parameters:  
+## Example
+Parameters:
 - Te - electron temperature [eV]
 - Ne - electron density [cm^-3]
-- elements - list of elements 
+- elements - list of elements
 - percentages - list of elements concentrations
 - resoulution
 - wavelength range: low_w, upper_w
-- maximal ion charge: max_ion_charge 
+- maximal ion charge: max_ion_charge
 - websraping: 'static' or 'dynamic'
 
 
@@ -72,13 +73,13 @@ libs.plot(color='blue', title='W Fe Mo composition')
 ![](https://github.com/MKastek/SimulatedLIBS/blob/master/images/plot_dynamic.png?raw=True)
 
 ### Ion spectra
-After simulation with parameter websraping = dynamic, ion spectra are stored in ion_spectra (pd.DataFrame) and can be plotted.  
+After simulation with parameter websraping = dynamic, ion spectra are stored in ion_spectra (pd.DataFrame) and can be plotted.
 ```python
 libs.plot_ion_spectra()
 ```
 ![](https://github.com/MKastek/SimulatedLIBS/blob/master/images/plot_ion_spectra.png?raw=True)
 ### Random dataset of samples
-Based on .csv file with chemical composition of samples, one can generate dataset of simulated LIBS measurements  
+Based on .csv file with chemical composition of samples, one can generate dataset of simulated LIBS measurements
 with different Te and Ne values.
 
 Example of input .csv file:
@@ -108,10 +109,10 @@ Example of output .csv file:
 ### Animations
 SimulatedLIBS can be helpful in creating LIBS animations mostly for educational purpose.
 
-#### Resolution animation  
-Changes in resolution in range: 500-10000.  
+#### Resolution animation
+Changes in resolution in range: 500-10000.
 ![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_resolution.gif?raw=True)
-#### Electron temperature animation  
+#### Electron temperature animation
 Changes in electron temperature Te in range: 0.5-5 eV.
 ![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_temperature.gif?raw=True)
 #### Electron density animation

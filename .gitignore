@@ -151,3 +151,6 @@ crashlytics-build.properties
 fabric.properties
 /dist/
 /SimulatedLIBS.egg-info/
+
+.mypy_cache
+.pytest_cache
