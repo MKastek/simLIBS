@@ -1,5 +1,6 @@
 # Simulated LIBS
 
+[![PyPI version](https://img.shields.io/pypi/v/SimulatedLIBS?style=flat&logo=pypi)](https://pypi.org/project/SimulatedLIBS/)
 ![Tests](https://github.com/MKastek/SimulatedLIBS/actions/workflows/test.yml/badge.svg)  
 
 *SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.  
