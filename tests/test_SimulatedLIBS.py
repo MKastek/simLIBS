@@ -1,6 +1,13 @@
 from SimulatedLIBS.simulation import SimulatedLIBS
 
 
-def test():
-    libs = SimulatedLIBS(elements=["H"], percentages=[100])
+def test_static():
+    libs = SimulatedLIBS(elements=["H"], percentages=[100], webscraping="static")
     assert libs.get_raw_spectrum() is not None
+    assert libs.get_interpolated_spectrum() is not None
+
+
+def test_sta():
+    libs = SimulatedLIBS(elements=["H"], percentages=[100], webscraping="static")
+    assert libs.get_raw_spectrum() is not None
+    assert libs.get_interpolated_spectrum() is not None
