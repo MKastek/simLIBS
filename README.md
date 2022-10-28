@@ -1,16 +1,18 @@
 # Simulated LIBS
 
+[![PyPI version](https://img.shields.io/pypi/v/SimulatedLIBS?style=flat&logo=pypi)](https://pypi.org/project/SimulatedLIBS/)  
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE.md)
 ![Tests](https://github.com/MKastek/SimulatedLIBS/actions/workflows/test.yml/badge.svg)  
 
 *SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.  
-*SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.
+*SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.  
 
-Project created for **B.Eng. thesis**:
+Project created for **B.Eng. thesis**:  
 Computer methods of the identification of the elements in optical spectra obtained by Laser Induced Breakdown Spectroscopy.
 
-**Thesis supervisor**: Paweł Gąsior PhD
-e-mail: pawel.gasior@ifpilm.pl
-Institute of Plasma Physics and Laser Microfusion - IPPLM
+**Thesis supervisor**: Paweł Gąsior PhD  
+e-mail: pawel.gasior@ifpilm.pl  
+Institute of Plasma Physics and Laser Microfusion - IPPLM  
 
 
 ## Installation
