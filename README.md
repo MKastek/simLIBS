@@ -3,6 +3,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/SimulatedLIBS?style=flat&logo=pypi)](https://pypi.org/project/SimulatedLIBS/)  
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE.md)
 ![Tests](https://github.com/MKastek/SimulatedLIBS/actions/workflows/test.yml/badge.svg)  
+[![ZENADO DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7260706.svg)](https://doi.org/10.5281/zenodo.7260706)
 
 *SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.  
 *SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.  
