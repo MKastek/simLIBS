@@ -20,8 +20,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
-import time
-
 
 class MyError(Exception):
     pass
@@ -34,27 +32,39 @@ class SimulatedLIBS(object):
 
     def __init__(
         self,
-        Te=1.0,
-        Ne=10**17,
-        elements=None,
-        percentages=None,
-        resolution=1000,
-        low_w=200,
-        upper_w=1000,
-        max_ion_charge=3,
-        webscraping="static",
+        Te: float = 1.0,
+        Ne: float = 10**17,
+        elements: list[str] = None,
+        percentages: list[float] = None,
+        resolution: int = 1000,
+        low_w: int = 200,
+        upper_w: int = 1000,
+        max_ion_charge: int = 3,
+        webscraping: str = "static",
     ):
-
         """
-        :param Te:    Electron temperature Te [eV]
-        :param Ne:  Electron density Ne [cm^-3]
-        :param elements:
-        :param percentages: List of element percentages
-        :param resolution:
-        :param low_w:   Lower wavelength [nm]
-        :param upper_w: Upper wavelength [nm]
-        :param max_ion_charge:  Maximal ion charge
-        :param webscarping: Type of webscraping: 'static' or 'dynamic'
+
+        Parameters
+        ----------
+        Te : float
+             Electron temperature Te [eV]
+        Ne: float
+            Electron density Ne [cm^-3]
+        elements: list[str]
+            List of elements
+        percentages: list[percentages]
+            List of element percentages
+        resolution: int
+            Resoultion of spectrometer
+        low_w: int
+            Lower wavelength [nm]
+        upper_w: int
+            Upper wavelength [nm]
+        max_ion_charge: int
+            Maximal ion charge
+        webscraping : str
+            Type of webscraping: 'static' or 'dynamic'
+
         """
 
         if (
@@ -103,7 +113,7 @@ class SimulatedLIBS(object):
             self.ion_spectra = None
             options = Options()
             options.add_argument("--disable-notifications")
-            options.headless = True
+            # options.headless = True
 
             self.driver = webdriver.Chrome(
                 service=Service(ChromeDriverManager().install()), options=options
@@ -158,6 +168,7 @@ class SimulatedLIBS(object):
             "&eden={}"
             "&maxcharge={}"
             "&min_rel_int=0.01"
+            "&int_scale=1"
             "&libs=1"
         )
         site = site.format(
@@ -202,7 +213,6 @@ class SimulatedLIBS(object):
         button_csv.click()
 
         self.driver.switch_to.window((self.driver.window_handles[1]))
-        time.sleep(0.2)
 
         soup = BeautifulSoup(self.driver.page_source, "html.parser")
         self.ion_spectra = pd.read_csv(io.StringIO(soup.pre.text), sep=",").fillna(0)
@@ -396,10 +406,12 @@ if __name__ == "__main__":
     libs_dynamic = SimulatedLIBS(
         Te=1.2,
         Ne=10**17,
-        elements=["Fe", "Mo", "Ni", "Cr"],
-        percentages=[90, 5, 3, 2],
+        elements=["Cr"],
+        percentages=[100],
         resolution=8000,
         low_w=200,
         upper_w=1000,
         webscraping="dynamic",
     )
+    libs_dynamic.plot()
+    plt.show()

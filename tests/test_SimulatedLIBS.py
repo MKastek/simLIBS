@@ -7,7 +7,7 @@ def test_static():
     assert libs.get_interpolated_spectrum() is not None
 
 
-def test_sta():
-    libs = SimulatedLIBS(elements=["H"], percentages=[100], webscraping="static")
+def test_dynamic():
+    libs = SimulatedLIBS(elements=["H"], percentages=[100], webscraping="dynamic")
     assert libs.get_raw_spectrum() is not None
     assert libs.get_interpolated_spectrum() is not None
