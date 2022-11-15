@@ -113,7 +113,7 @@ class SimulatedLIBS(object):
             self.ion_spectra = None
             options = Options()
             options.add_argument("--disable-notifications")
-            # options.headless = True
+            options.headless = True
 
             self.driver = webdriver.Chrome(
                 service=Service(ChromeDriverManager().install()), options=options
@@ -141,6 +141,12 @@ class SimulatedLIBS(object):
         )
 
     def get_site(self):
+        """
+
+        Returns
+        -------
+
+        """
         composition = ""
         spectrum = ""
 
@@ -186,7 +192,10 @@ class SimulatedLIBS(object):
 
     def retrieve_data_dynamic(self):
         """
-        retrieve data with dynamic webscraping (selenium)
+
+        Returns
+        -------
+
         """
         site = self.get_site()
         self.driver.get(site)
@@ -224,9 +233,11 @@ class SimulatedLIBS(object):
 
     def retrieve_data_static(self):
         """
-        retrieve data with static webscraping (beautiful soup)
-        """
 
+        Returns
+        -------
+
+        """
         site = self.get_site()
         respond = requests.get(site)
         soup = BeautifulSoup(respond.content, "html.parser")
@@ -234,7 +245,8 @@ class SimulatedLIBS(object):
         html_data = str(html_data[5])
         self.retrieve_spectrum_from_html(html_data)
 
-    def retrieve_spectrum_from_html(self, html_data):
+    def retrieve_spectrum_from_html(self, html_data: str):
+        print(type(html_data))
         start_index_of_spectrum_data = [
             (m.start(0), m.end(0))
             for m in re.finditer(r"var dataDopplerArray=.*", html_data)
@@ -254,7 +266,7 @@ class SimulatedLIBS(object):
             self.raw_spectrum.loc[i] = [spectrum[0], spectrum[1]]
             i += 1
 
-    def interpolate(self, resolution=0.1):
+    def interpolate(self, resolution: float = 0.1):
         """
         interpolation of intensity with given resolution using CubicSpline
         """
@@ -300,15 +312,9 @@ class SimulatedLIBS(object):
         )
 
     def get_interpolated_spectrum(self):
-        """
-        :return:  interpolated spectrum
-        """
         return self.interpolated_spectrum
 
     def get_raw_spectrum(self):
-        """
-        :return:  raw spectrum
-        """
         return self.raw_spectrum
 
     def get_ion_spectra(self):
@@ -318,13 +324,21 @@ class SimulatedLIBS(object):
         else:
             print("Function works with webscraping parameter 'dynamic'")
 
-    def save_to_csv(self, filepath):
+    def save_to_csv(self, filepath: str):
 
         self.interpolated_spectrum.to_csv(path_or_buf=filepath)
 
     @staticmethod
-    def worker(input_df, num_of_materials, Te_min, Te_max, Ne_min, Ne_max, webscraping):
-        """ """
+    def worker(
+        input_df: pd.DataFrame,
+        num_of_materials: int,
+        Te_min: float,
+        Te_max: float,
+        Ne_min: float,
+        Ne_max: float,
+        webscraping: str,
+    ):
+
         percentages = input_df.iloc[random.randrange(num_of_materials)].values[:-1]
         elements = input_df.iloc[random.randrange(num_of_materials)].keys().values[:-1]
         name = input_df.iloc[random.randrange(num_of_materials)]["name"]
@@ -349,16 +363,40 @@ class SimulatedLIBS(object):
 
     @staticmethod
     def create_dataset(
-        input_csv_file,
-        output_csv_file="out_put.csv",
-        size=10,
-        Te_min=1.0,
-        Te_max=2.0,
-        Ne_min=10**17,
-        Ne_max=10**18,
-        websraping="static",
-    ):
-        """ """
+        input_csv_file: str,
+        output_csv_file: str = "out_put.csv",
+        size: int = 10,
+        Te_min: float = 1.0,
+        Te_max: float = 2.0,
+        Ne_min: float = 10**17,
+        Ne_max: float = 10**18,
+        webscraping: str = "static",
+    ) -> pd.DataFrame:
+        """
+
+        Parameters
+        ----------
+        input_csv_file : str
+            Name of file with elements composition of simulated samples
+        output_csv_file : str
+            Name output file
+        size : int
+            Output file size - number of simulated samples
+        Te_min : float
+            Minimal random electron temperature Te[eV]
+        Te_max : float
+            Maximal random electron temperature Te[eV]
+        Ne_min : float
+            Minimal random electron density Ne[cm^-3]
+        Ne_max : float
+            Maximal random electron density Ne[cm^-3]
+        webscraping : str
+            Webscraping type 'static' or 'dynamic'
+
+        Returns
+        -------
+
+        """
         input_df = pd.read_csv(input_csv_file)
         num_of_materials = len(input_df)
         pool = ThreadPoolExecutor(size)
@@ -371,7 +409,7 @@ class SimulatedLIBS(object):
                 Te_max,
                 Ne_min,
                 Ne_max,
-                websraping,
+                webscraping,
             )
             for _ in range(size)
         ]
@@ -403,15 +441,6 @@ class SimulatedLIBS(object):
 
 
 if __name__ == "__main__":
-    libs_dynamic = SimulatedLIBS(
-        Te=1.2,
-        Ne=10**17,
-        elements=["Cr"],
-        percentages=[100],
-        resolution=8000,
-        low_w=200,
-        upper_w=1000,
-        webscraping="dynamic",
-    )
-    libs_dynamic.plot()
+    libs = SimulatedLIBS(elements=["He"], percentages=[100], webscraping="static")
+    libs.plot()
     plt.show()
