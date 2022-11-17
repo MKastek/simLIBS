@@ -115,10 +115,11 @@ class SimulatedLIBS(object):
             options.add_argument("--disable-notifications")
             options.headless = True
 
-            self.driver = webdriver.Chrome(
-                service=Service(ChromeDriverManager().install()), options=options
-            )
+            service = Service(ChromeDriverManager().install())
+            self.driver = webdriver.Chrome(service=service, options=options)
             self.retrieve_data_dynamic()
+            self.driver.quit()
+            self.driver.stop_client()
 
     def __repr__(self):
         return "SimulatedLIBS(Te: '{}', Ne: '{:0.3e}', elements: '{}', percentages: '{}', resolution: '{}', low_w: '{}', upper_w: '{}', max_ion_charge: '{}', webscraping: '{}')".format(
@@ -246,7 +247,7 @@ class SimulatedLIBS(object):
         self.retrieve_spectrum_from_html(html_data)
 
     def retrieve_spectrum_from_html(self, html_data: str):
-        print(type(html_data))
+
         start_index_of_spectrum_data = [
             (m.start(0), m.end(0))
             for m in re.finditer(r"var dataDopplerArray=.*", html_data)
@@ -343,7 +344,7 @@ class SimulatedLIBS(object):
         elements = input_df.iloc[random.randrange(num_of_materials)].keys().values[:-1]
         name = input_df.iloc[random.randrange(num_of_materials)]["name"]
         Te = random.uniform(Te_min, Te_max)
-        Ne = random.uniform(1, Ne_max / Ne_min)
+        Ne = random.uniform(Ne_min, Ne_max)
         fun = SimulatedLIBS(
             Te=Te,
             Ne=Ne,
@@ -351,6 +352,7 @@ class SimulatedLIBS(object):
             percentages=percentages,
             webscraping=webscraping,
         ).get_interpolated_spectrum()
+
         return {
             "spectrum": fun,
             "composition": pd.DataFrame(
@@ -425,6 +427,7 @@ class SimulatedLIBS(object):
 
         for spectra in spectra_pool:
             intensity = spectra.result()["spectrum"]["intensity"].values.tolist()
+
             percentages = spectra.result()["composition"]["percentages"].values.tolist()
             intensity.extend(percentages)
             intensity.extend(spectra.result()["name"])
@@ -438,9 +441,3 @@ class SimulatedLIBS(object):
         output_df.reset_index(drop=True)
         output_df.to_csv(output_csv_file)
         return output_df
-
-
-if __name__ == "__main__":
-    libs = SimulatedLIBS(elements=["He"], percentages=[100], webscraping="static")
-    libs.plot()
-    plt.show()

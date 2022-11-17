@@ -1,19 +1,19 @@
 # Simulated LIBS
 
-[![PyPI version](https://img.shields.io/pypi/v/SimulatedLIBS?style=flat&logo=pypi)](https://pypi.org/project/SimulatedLIBS/)  
+[![PyPI version](https://img.shields.io/pypi/v/SimulatedLIBS?style=flat&logo=pypi)](https://pypi.org/project/SimulatedLIBS/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE.md)
-![Tests](https://github.com/MKastek/SimulatedLIBS/actions/workflows/test.yml/badge.svg)  
+![Tests](https://github.com/MKastek/SimulatedLIBS/actions/workflows/test.yml/badge.svg)
 [![ZENADO DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7260706.svg)](https://doi.org/10.5281/zenodo.7260706)
 
-*SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.  
-*SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.  
+*SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.
+*SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.
 
-Project created for **B.Eng. thesis**:  
+Project created for **B.Eng. thesis**:
 Computer methods of the identification of the elements in optical spectra obtained by Laser Induced Breakdown Spectroscopy.
 
-**Thesis supervisor**: Paweł Gąsior PhD  
-e-mail: pawel.gasior@ifpilm.pl  
-Institute of Plasma Physics and Laser Microfusion - IPPLM  
+**Thesis supervisor**: Paweł Gąsior PhD
+e-mail: pawel.gasior@ifpilm.pl
+Institute of Plasma Physics and Laser Microfusion - IPPLM
 
 
 ## Installation
@@ -39,8 +39,15 @@ Parameters:
 
 ### Static websraping
 ```python
-libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','Fe','Mo'],percentages=[50,25,25],
-                                resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3, webscraping='static')
+libs = simulation.SimulatedLIBS(Te=1.0,
+                                Ne=10**17,
+                                elements=['W','Fe','Mo'],
+                                percentages=[50,25,25],
+                                resolution=1000,
+                                low_w=200,
+                                upper_w=1000,
+                                max_ion_charge=3,
+                                webscraping='static')
 ```
 
 ### Plot
@@ -67,8 +74,15 @@ libs.get_raw_spectrum()
 ```
 ### Dynamic webscraping
 ```python
-libs = simulation.SimulatedLIBS(Te=1.0, Ne=10**17, elements=['W','Fe','Mo'],percentages=[50,25,25],
-                                resolution=1000,low_w=200,upper_w=1000,max_ion_charge=3, webscraping='dynamic')
+libs = simulation.SimulatedLIBS(Te=1.0,
+                                Ne=10**17,
+                                elements=['W','Fe','Mo'],
+                                percentages=[50,25,25],
+                                resolution=1000,
+                                low_w=200,
+                                upper_w=1000,
+                                max_ion_charge=3,
+                                webscraping='dynamic')
 ```
 
 ### Plot
