@@ -1,5 +1,6 @@
 import numpy as np
 from SimulatedLIBS.simulation import SimulatedLIBS
+import os
 
 
 def test_static():
@@ -30,3 +31,5 @@ def test_values():
 def test_dataset():
     libs_df = SimulatedLIBS.create_dataset(input_csv_file="data.csv", size=1)
     assert libs_df.iloc[:, :-6].max().max() > 0
+    if os.path.exists("out_put.csv"):
+        os.remove("out_put.csv")
