@@ -142,3 +142,6 @@ Changes in electron temperature Te in range: 0.5-5 eV.
 #### Electron density animation
 Changes in electron density Ne in range: 0.7-1.3 e+17 [cm^-3].
 ![](https://github.com/MKastek/SimulatedLIBS/blob/master/SimulatedLIBS/animations/saved-gifs/animated_density.gif?raw=True)
+
+## References
+- M. Kastek, _et al._, _Analysis of hydrogen isotopes retention in thermonuclear reactors with LIBS supported by machine learning_. Spectrochimica Acta Part B Atomic Spectroscopy 199: 106576. DOI: 10.1016/j.sab.2022.106576](https://doi.org/10.1016/j.sab.2022.106576).
