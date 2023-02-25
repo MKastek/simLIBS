@@ -6,7 +6,8 @@
 [![ZENADO DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7260706.svg)](https://doi.org/10.5281/zenodo.7260706)
 
 *SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.  
-*SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.
+*SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.  
+*SimulatedLIBS* was mentioned is [FOSS For Spectroscopy](https://bryanhanson.github.io/FOSS4Spectroscopy/) by Prof. Bryan A. Hanson, DePauw University.
 
 Project created for **B.Eng. thesis**:  
 Computer methods of the identification of the elements in optical spectra obtained by Laser Induced Breakdown Spectroscopy.
