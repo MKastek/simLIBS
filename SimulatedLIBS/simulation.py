@@ -19,6 +19,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
+import urllib3
+
+urllib3.disable_warnings()
 
 
 class MyError(Exception):
@@ -240,7 +243,7 @@ class SimulatedLIBS(object):
 
         """
         site = self.get_site()
-        respond = requests.get(site)
+        respond = requests.get(site, verify=False)
         soup = BeautifulSoup(respond.content, "html.parser")
         html_data = soup.find_all("script")
         html_data = str(html_data[5])
@@ -441,3 +444,11 @@ class SimulatedLIBS(object):
         output_df.reset_index(drop=True)
         output_df.to_csv(output_csv_file)
         return output_df
+
+
+if __name__ == "__main__":
+    libs = SimulatedLIBS(
+        elements=["He", "W"], percentages=[50, 50], webscraping="static"
+    )
+    libs.plot()
+    plt.show()
