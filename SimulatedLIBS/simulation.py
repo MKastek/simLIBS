@@ -433,7 +433,7 @@ class SimulatedLIBS(object):
 
             percentages = spectra.result()["composition"]["percentages"].values.tolist()
             intensity.extend(percentages)
-            intensity.extend(spectra.result()["name"])
+            intensity.append(spectra.result()["name"])
             intensity.append(spectra.result()["Te[eV]"])
             intensity.append(spectra.result()["Ne[cm^-3]".format(Ne_min=Ne_min)])
             output_df = pd.concat(
