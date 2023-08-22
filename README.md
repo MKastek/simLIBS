@@ -5,16 +5,16 @@
 ![Tests](https://github.com/MKastek/SimulatedLIBS/actions/workflows/test.yml/badge.svg)
 [![ZENADO DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7260706.svg)](https://doi.org/10.5281/zenodo.7260706)
 
-*SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.  
-*SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.  
+*SimulatedLIBS* provides Python class to simulate LIBS spectra with NIST LIBS Database interface.
+*SimulatedLIBS* also allows the creation of simulated data sets that can be used to train ML models.
 *SimulatedLIBS* was mentioned is [FOSS For Spectroscopy](https://bryanhanson.github.io/FOSS4Spectroscopy/) by Prof. Bryan A. Hanson, DePauw University.
 
-Project created for **B.Eng. thesis**:  
+Project created for **B.Eng. thesis**:
 Computer methods of the identification of the elements in optical spectra obtained by Laser Induced Breakdown Spectroscopy.
 
-**Thesis supervisor**: Paweł Gąsior PhD  
-e-mail: pawel.gasior@ifpilm.pl  
-Institute of Plasma Physics and Laser Microfusion - IPPLM  
+**Thesis supervisor**: Paweł Gąsior PhD
+e-mail: pawel.gasior@ifpilm.pl
+Institute of Plasma Physics and Laser Microfusion - IPPLM
 
 
 ## Installation
@@ -112,11 +112,11 @@ Example of input .csv file:
 
 ```python
 simulation.SimulatedLIBS.create_dataset(input_csv_file="data.csv",
-                                        output_csv_file='output.csv', 
-                                        size=100, 
-                                        Te_min=1.0, 
-                                        Te_max=2.0, 
-                                        Ne_min=10**17, 
+                                        output_csv_file='output.csv',
+                                        size=100,
+                                        Te_min=1.0,
+                                        Te_max=2.0,
+                                        Ne_min=10**17,
                                         Ne_max=10**18)
 ```
 
@@ -146,3 +146,7 @@ Changes in electron density Ne in range: 0.7-1.3 e+17 [cm^-3].
 
 ## References
 - M. Kastek, _et al._, _Analysis of hydrogen isotopes retention in thermonuclear reactors with LIBS supported by machine learning_. Spectrochimica Acta Part B Atomic Spectroscopy 199: 106576. DOI: [10.1016/j.sab.2022.106576](https://doi.org/10.1016/j.sab.2022.106576).
+
+
+## Used in Research
+- Chen Z, Chen Z, Jiang W, Guo L, Zhang Y. _Line intensity calculation of laser-induced breakdown spectroscopy during plasma expansion in nonlocal thermodynamic equilibrium._ Opt Lett. 2023 Jun 15;48(12):3227-3230. DOI: [10.1364/OL.488250](https://opg.optica.org/ol/abstract.cfm?uri=ol-48-12-3227).

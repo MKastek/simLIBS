@@ -246,8 +246,8 @@ class SimulatedLIBS(object):
         respond = requests.get(site, verify=False)
         soup = BeautifulSoup(respond.content, "html.parser")
         html_data = soup.find_all("script")
-        html_data = str(html_data[5])
-        self.retrieve_spectrum_from_html(html_data)
+        html_data = list(filter(lambda t: "var dataDopplerArray" in str(t), html_data))
+        self.retrieve_spectrum_from_html(str(html_data[0]))
 
     def retrieve_spectrum_from_html(self, html_data: str):
 
