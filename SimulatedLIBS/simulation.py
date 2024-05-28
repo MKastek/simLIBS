@@ -342,10 +342,10 @@ class SimulatedLIBS(object):
         Ne_max: float,
         webscraping: str,
     ):
-
-        percentages = input_df.iloc[random.randrange(num_of_materials)].values[:-1]
-        elements = input_df.iloc[random.randrange(num_of_materials)].keys().values[:-1]
-        name = input_df.iloc[random.randrange(num_of_materials)]["name"]
+        seed = random.randrange(num_of_materials)
+        percentages = input_df.iloc[seed].values[:-1]
+        elements = input_df.iloc[seed].keys().values[:-1]
+        name = input_df.iloc[seed]["name"]
         Te = random.uniform(Te_min, Te_max)
         Ne = random.uniform(Ne_min, Ne_max)
         fun = SimulatedLIBS(
@@ -403,6 +403,7 @@ class SimulatedLIBS(object):
 
         """
         input_df = pd.read_csv(input_csv_file)
+        print(input_df)
         num_of_materials = len(input_df)
         pool = ThreadPoolExecutor(size)
         spectra_pool = [
@@ -444,11 +445,3 @@ class SimulatedLIBS(object):
         output_df.reset_index(drop=True)
         output_df.to_csv(output_csv_file)
         return output_df
-
-
-if __name__ == "__main__":
-    libs = SimulatedLIBS(
-        elements=["He", "W"], percentages=[50, 50], webscraping="static"
-    )
-    libs.plot()
-    plt.show()
