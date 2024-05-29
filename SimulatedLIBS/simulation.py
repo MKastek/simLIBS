@@ -1,4 +1,5 @@
 import sys
+from typing import List
 
 from bs4 import BeautifulSoup
 import requests
@@ -24,14 +25,39 @@ import urllib3
 urllib3.disable_warnings()
 
 
-class MyError(Exception):
+class CompositionError(Exception):
     pass
 
 
-class SimulatedLIBS(object):
+def validate_simulated_libs(
+    Te: float,
+    Ne: float,
+    elements: List[str],
+    percentages: List[float],
+    low_w: int,
+    upper_w: int,
+    max_ion_charge: int,
+):
+    """
+    Validates the input parameters for SimulatedLIBS.
 
-    # filepath to class root folder
-    project_root = os.path.dirname(os.path.abspath(__file__))
+    Raises:
+        CompositionError: If the sum of percentages exceeds 100.
+        ValueError: If any parameter has an invalid value (negative, wrong order).
+    """
+    if sum(percentages) > 100:
+        raise CompositionError("Sum of element percentages cannot exceed 100%")
+    if (
+        any(value < 0 for value in [Te, Ne, max_ion_charge])
+        or low_w > upper_w
+        or len(elements) != len(percentages)
+    ):
+        raise ValueError(
+            "Invalid parameters: negative values, wrong wavelength order, or element/percentage mismatch."
+        )
+
+
+class SimulatedLIBS(object):
 
     def __init__(
         self,
@@ -70,29 +96,11 @@ class SimulatedLIBS(object):
 
         """
 
-        if (
-            sum(percentages) > 100
-            or Te < 0
-            or Ne < 0
-            or low_w > upper_w
-            or upper_w < low_w
-            or max_ion_charge < 0
-        ):
-            try:
-                raise (MyError("Error in SimulatedLLIBS"))
-            except MyError as error:
-                print(str(error))
-                sys.exit(1)
-
-        if len(elements) != len(percentages):
-            try:
-                raise (MyError("Error in SimulatedLLIBS"))
-            except MyError as error:
-                print(str(error))
-                sys.exit(1)
+        validate_simulated_libs(
+            Te, Ne, elements, percentages, low_w, upper_w, max_ion_charge
+        )
 
         self.Te = Te
-
         self.Ne = round(Ne, 3 - int(math.floor(math.log10(abs(Ne)))) - 1)
         self.Ne = re.sub(r"\+", "", str(self.Ne))
 
@@ -105,44 +113,29 @@ class SimulatedLIBS(object):
 
         self.raw_spectrum = pd.DataFrame({"wavelength": [], "intensity": []})
         self.interpolated_spectrum = pd.DataFrame({"wavelength": [], "intensity": []})
-
         self.webscraping = webscraping
-        # retrieving data
-        if webscraping == "static":
-            self.retrieve_data_static()
-            # interpolating data
-            self.interpolate()
-        elif webscraping == "dynamic":
-            self.ion_spectra = None
-            options = Options()
-            options.add_argument("--disable-notifications")
-            options.headless = True
 
-            service = Service(ChromeDriverManager().install())
-            self.driver = webdriver.Chrome(service=service, options=options)
-            self.retrieve_data_dynamic()
-            self.driver.quit()
-            self.driver.stop_client()
+        match webscraping:
+            case "static":
+                self.retrieve_data_static()
+                self.interpolate()
+            case "dynamic":
+                self.ion_spectra = None
+                options = Options()
+                options.add_argument("--disable-notifications")
+                options.headless = True
+
+                service = Service(ChromeDriverManager().install())
+                self.driver = webdriver.Chrome(service=service, options=options)
+                self.retrieve_data_dynamic()
+                self.driver.quit()
+                self.driver.stop_client()
 
     def __repr__(self):
-        return "SimulatedLIBS(Te: '{}', Ne: '{:0.3e}', elements: '{}', percentages: '{}', resolution: '{}', low_w: '{}', upper_w: '{}', max_ion_charge: '{}', webscraping: '{}')".format(
-            self.Te,
-            float(self.Ne),
-            self.elements,
-            self.percentages,
-            self.resolution,
-            self.low_w,
-            self.upper_w,
-            self.max_ion_charge,
-            self.webscraping,
-        )
+        return f"SimulatedLIBS(Te={self.Te:.2f} eV, Ne={self.Ne:.3e} cm^-3, elements={', '.join(self.elements)}, percentages={', '.join([str(p) for p in self.percentages])}, resolution={self.resolution}, low_w={self.low_w}, upper_w={self.upper_w}, max_ion_charge={self.max_ion_charge})"
 
     def __str__(self):
-        return (
-            "Te: '{}' eV Ne: '{:0.3e}' cm^-3  elements: '{}' percentages: '{}'".format(
-                self.Te, float(self.Ne), self.elements, self.percentages
-            )
-        )
+        return f"Te: {self.Te:.2f} eV, Ne: {self.Ne:.3e} cm^-3, elements: {', '.join(self.elements)}, percentages: {', '.join([str(p) for p in self.percentages])}"
 
     def get_site(self):
         """
@@ -280,9 +273,7 @@ class SimulatedLIBS(object):
             bc_type="natural",
         )
         x = np.arange(self.low_w, self.upper_w, resolution)
-        y = cs(x)
-        # none negative values
-        y = [0 if i < 0 else i for i in y]
+        y = np.clip(cs(x), 0, np.inf)
 
         self.interpolated_spectrum["wavelength"] = np.round(x, 3)
         self.interpolated_spectrum["intensity"] = np.round(y, 3)
@@ -292,8 +283,6 @@ class SimulatedLIBS(object):
         color=(random.random(), random.random(), random.random()),
         title="Simulated LIBS",
     ):
-
-        # plot with random colors
         plt.plot(
             self.interpolated_spectrum["wavelength"],
             self.interpolated_spectrum["intensity"],
@@ -326,23 +315,23 @@ class SimulatedLIBS(object):
         if self.webscraping == "dynamic" and self.ion_spectra is not None:
             return self.ion_spectra
         else:
-            print("Function works with webscraping parameter 'dynamic'")
+            raise ValueError(
+                "Data retrieval requires webscraping method set to 'dynamic' and successful data acquisition."
+            )
 
     def save_to_csv(self, filepath: str):
-
         self.interpolated_spectrum.to_csv(path_or_buf=filepath)
 
     @staticmethod
     def worker(
         input_df: pd.DataFrame,
-        num_of_materials: int,
         Te_min: float,
         Te_max: float,
         Ne_min: float,
         Ne_max: float,
         webscraping: str,
     ):
-        seed = random.randrange(num_of_materials)
+        seed = random.randrange(len(input_df))
         percentages = input_df.iloc[seed].values[:-1]
         elements = input_df.iloc[seed].keys().values[:-1]
         name = input_df.iloc[seed]["name"]
@@ -368,8 +357,7 @@ class SimulatedLIBS(object):
 
     @staticmethod
     def create_dataset(
-        input_csv_file: str,
-        output_csv_file: str = "out_put.csv",
+        input_composition_df: pd.DataFrame,
         size: int = 10,
         Te_min: float = 1.0,
         Te_max: float = 2.0,
@@ -381,10 +369,8 @@ class SimulatedLIBS(object):
 
         Parameters
         ----------
-        input_csv_file : str
-            Name of file with elements composition of simulated samples
-        output_csv_file : str
-            Name output file
+        input_composition_df: pd.DataFrame
+            Input df with composition of elements to simulate
         size : int
             Output file size - number of simulated samples
         Te_min : float
@@ -402,15 +388,11 @@ class SimulatedLIBS(object):
         -------
 
         """
-        input_df = pd.read_csv(input_csv_file)
-        print(input_df)
-        num_of_materials = len(input_df)
         pool = ThreadPoolExecutor(size)
         spectra_pool = [
             pool.submit(
                 SimulatedLIBS.worker,
-                input_df,
-                num_of_materials,
+                input_composition_df,
                 Te_min,
                 Te_max,
                 Ne_min,
@@ -423,7 +405,7 @@ class SimulatedLIBS(object):
             str(wavelength)
             for wavelength in spectra_pool[0].result()["spectrum"]["wavelength"]
         ]
-        for val in input_df.columns.values:
+        for val in input_composition_df.columns.values:
             columns.append(str(val))
         columns.append("Te[eV]")
         columns.append("Ne[cm^-3]".format(Ne_min=Ne_min))
@@ -443,5 +425,4 @@ class SimulatedLIBS(object):
             )
 
         output_df.reset_index(drop=True)
-        output_df.to_csv(output_csv_file)
         return output_df
