@@ -39,7 +39,7 @@ def validate_simulated_libs(
     max_ion_charge: int,
 ):
     """
-    Validates the input parameters for SimulatedLIBS.
+    Validates the input parameters for simLIBS.
 
     Raises:
         CompositionError: If the sum of percentages exceeds 100.
@@ -132,7 +132,7 @@ class SimulatedLIBS(object):
                 self.driver.stop_client()
 
     def __repr__(self):
-        return f"SimulatedLIBS(Te={self.Te:.2f} eV, Ne={self.Ne:.3e} cm^-3, elements={', '.join(self.elements)}, percentages={', '.join([str(p) for p in self.percentages])}, resolution={self.resolution}, low_w={self.low_w}, upper_w={self.upper_w}, max_ion_charge={self.max_ion_charge})"
+        return f"simLIBS(Te={self.Te:.2f} eV, Ne={self.Ne:.3e} cm^-3, elements={', '.join(self.elements)}, percentages={', '.join([str(p) for p in self.percentages])}, resolution={self.resolution}, low_w={self.low_w}, upper_w={self.upper_w}, max_ion_charge={self.max_ion_charge})"
 
     def __str__(self):
         return f"Te: {self.Te:.2f} eV, Ne: {self.Ne:.3e} cm^-3, elements: {', '.join(self.elements)}, percentages: {', '.join([str(p) for p in self.percentages])}"

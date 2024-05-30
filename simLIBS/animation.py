@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
 import os
-from SimulatedLIBS import simulation
+from simLIBS import simulation
 
 
 def get_intensity(

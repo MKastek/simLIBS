@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from SimulatedLIBS import simulation
+from simLIBS import simulation
 
 libs = simulation.SimulatedLIBS(
     Te=1.0,

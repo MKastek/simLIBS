@@ -24,7 +24,7 @@ pip install SimulatedLIBS
 ## Import
 
 ```python
-from SimulatedLIBS import SimulatedLIBS
+from simLIBS import SimulatedLIBS
 ```
 ## Example
 Parameters:

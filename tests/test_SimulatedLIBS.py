@@ -3,8 +3,8 @@ import pandas as pd
 import pytest
 
 import os
-from SimulatedLIBS import validate_simulated_libs, SimulatedLIBS
-from SimulatedLIBS.simulation import CompositionError
+from simLIBS import validate_simulated_libs, SimulatedLIBS
+from simLIBS.simulation import CompositionError
 
 
 def test_static():
