@@ -24,7 +24,7 @@ pip install SimulatedLIBS
 ## Import
 
 ```python
-from SimulatedLIBS import simulation
+from SimulatedLIBS import SimulatedLIBS
 ```
 ## Example
 Parameters:
@@ -40,15 +40,15 @@ Parameters:
 
 ### Static websraping
 ```python
-libs = simulation.SimulatedLIBS(Te=1.0,
-                                Ne=10**17,
-                                elements=['W','Fe','Mo'],
-                                percentages=[50,25,25],
-                                resolution=1000,
-                                low_w=200,
-                                upper_w=1000,
-                                max_ion_charge=3,
-                                webscraping='static')
+libs = SimulatedLIBS(Te=1.0,
+                     Ne=10**17,
+                     elements=['W','Fe','Mo'],
+                     percentages=[50,25,25],
+                     resolution=1000,
+                     low_w=200,
+                     upper_w=1000,
+                     max_ion_charge=3,
+                     webscraping='static')
 ```
 
 ### Plot
@@ -75,15 +75,15 @@ libs.get_raw_spectrum()
 ```
 ### Dynamic webscraping
 ```python
-libs = simulation.SimulatedLIBS(Te=1.0,
-                                Ne=10**17,
-                                elements=['W','Fe','Mo'],
-                                percentages=[50,25,25],
-                                resolution=1000,
-                                low_w=200,
-                                upper_w=1000,
-                                max_ion_charge=3,
-                                webscraping='dynamic')
+libs = SimulatedLIBS(Te=1.0,
+                     Ne=10**17,
+                     elements=['W','Fe','Mo'],
+                     percentages=[50,25,25],
+                     resolution=1000,
+                     low_w=200,
+                     upper_w=1000,
+                     max_ion_charge=3,
+                     webscraping='dynamic')
 ```
 
 ### Plot
@@ -102,7 +102,7 @@ libs.plot_ion_spectra()
 Based on .csv file with chemical composition of samples, one can generate dataset of simulated LIBS measurements
 with different Te and Ne values.
 
-Example of input .csv file:
+Example of input_composition_df pd.DataFrame:
 
 |W  |H  |He |name|
 |---|---|---|----|
@@ -111,13 +111,12 @@ Example of input .csv file:
 |40 |40 |20 |C   |
 
 ```python
-simulation.SimulatedLIBS.create_dataset(input_csv_file="data.csv",
-                                        output_csv_file='output.csv',
-                                        size=100,
-                                        Te_min=1.0,
-                                        Te_max=2.0,
-                                        Ne_min=10**17,
-                                        Ne_max=10**18)
+SimulatedLIBS.create_dataset(input_composition_df,
+                             size=100,
+                             Te_min=1.0,
+                             Te_max=2.0,
+                             Ne_min=10**17,
+                             Ne_max=10**18)
 ```
 
 Example of output .csv file:

@@ -295,7 +295,6 @@ class SimulatedLIBS(object):
         plt.ylabel("Line Intensity [a.u.]")
 
     def plot_ion_spectra(self):
-
         self.ion_spectra.drop(["Sum(calc)"], axis=1).plot(
             x="Wavelength (nm)",
             xlabel=r"$\lambda$ [nm]",
@@ -413,7 +412,6 @@ class SimulatedLIBS(object):
 
         for spectra in spectra_pool:
             intensity = spectra.result()["spectrum"]["intensity"].values.tolist()
-
             percentages = spectra.result()["composition"]["percentages"].values.tolist()
             intensity.extend(percentages)
             intensity.append(spectra.result()["name"])

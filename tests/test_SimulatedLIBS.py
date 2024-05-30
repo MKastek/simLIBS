@@ -35,6 +35,12 @@ def test_values():
 def test_dataset():
     input_df = pd.read_csv("data.csv")
     libs_df = SimulatedLIBS.create_dataset(input_df, size=1)
+    assert (
+        input_df[
+            input_df["name"] == libs_df.iloc[:, -6:-2]["name"].iloc[0]
+        ].values.tolist()[0]
+        == libs_df.iloc[:, -6:-2].iloc[0].values.tolist()
+    )
     assert libs_df.iloc[:, :-6].max().max() > 0
     if os.path.exists("out_put.csv"):
         os.remove("out_put.csv")
