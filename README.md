@@ -19,7 +19,7 @@ Institute of Plasma Physics and Laser Microfusion - IPPLM
 
 ## Installation
 ```python
-pip install SimulatedLIBS
+pip install simLIBS
 ```
 ## Import
 
